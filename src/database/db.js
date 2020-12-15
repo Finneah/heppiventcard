@@ -1,9 +1,10 @@
+import {Card} from 'native-base';
 import Vasern from 'vasern';
 
-import {IntervalSchema} from './Schemas/IntervalSchema';
+import {CardSchema} from './Schemas/CardSchema';
 
 const vasern = new Vasern({
-  schemas: [IntervalSchema],
+  schemas: [CardSchema],
   version: 1,
 });
 

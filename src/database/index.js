@@ -2,7 +2,7 @@ import VasernDB from './db';
 import Error_Handler from '../Error_Handler';
 import intervalJSON from './intervals.json';
 
-import {IntervalSchema} from './Schemas/IntervalSchema';
+import {IntervalSchema} from './Schemas/CardSchema';
 
 const {Intervals} = VasernDB;
 // let categorieModel = new CategorieModel();

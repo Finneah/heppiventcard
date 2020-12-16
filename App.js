@@ -2,17 +2,18 @@ import {Root, StyleProvider} from 'native-base';
 import React from 'react';
 
 import getTheme from './native-base-theme/components';
-import material from './native-base-theme/variables/material';
+import platform from './native-base-theme/variables/platform';
 import {NavigationContainer} from '@react-navigation/native';
 import HomeScreen from './src/screens/HomeScreen';
 
 import {createStackNavigator} from '@react-navigation/stack';
+import {strings} from './src/i18n';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <StyleProvider style={getTheme(material)}>
+    <StyleProvider style={getTheme(platform)}>
       <Root>
         <NavigationContainer>
           <Stack.Navigator headerMode="none">
@@ -20,7 +21,7 @@ const App = () => {
               name="Home"
               component={HomeScreen}
               options={{
-                headerTitle: 'Heppiventcard',
+                headerTitle: strings('APPTITLE'),
               }}
             />
           </Stack.Navigator>

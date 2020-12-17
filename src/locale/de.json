@@ -1,5 +1,6 @@
 {
   "APPTITLE": "Heppiventcard",
   "MEMBERCARD": "Membercard",
-  "RANK": "Rang"
+  "RANK": "Rang",
+  "NAME": "Name"
 }

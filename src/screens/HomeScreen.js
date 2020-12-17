@@ -16,11 +16,29 @@ import HomeScreenHeader from '../components/HomeScreenHeader';
 import MemberCard from '../components/MemberCard';
 import StampCard from '../components/StampCard';
 
+import RNFetchBlob from 'rn-fetch-blob';
+
+let imgUrl =
+  'https://images.template.net/wp-content/uploads/2015/09/16233908/Dark-Wallpapers.jpg';
 const numCol = 3;
 const HomeScreen = ({}) => {
   const [cards, setCards] = useState([]);
-
+  const [defaultImage, setDefaultImage] = useState(undefined);
+  React.useLayoutEffect(() => {
+    console.log('useLayoutEffect');
+    RNFetchBlob.fetch('GET', imgUrl, {})
+      .then((res) => {
+        console.log(res);
+        setDefaultImage(res.data);
+      })
+      // Something went wrong:
+      .catch((errorMessage, statusCode) => {
+        // error handling
+        console.log(errorMessage, statusCode);
+      });
+  }, []);
   React.useEffect(() => {
+    console.log('useEffect');
     _getStampCards();
   }, []);
 
@@ -36,53 +54,53 @@ const HomeScreen = ({}) => {
       content: [
         {
           name: '1',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '2',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
         {
           name: '3',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
         {
           name: '4',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
         {
           name: '5',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
         {
           name: '6',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
         {
           name: '7',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
         {
           name: '8',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
         {
           name: '9',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
         {
           name: '10',
-          image: 'test',
+          image: defaultImage,
           done: false,
         },
       ],
@@ -94,61 +112,61 @@ const HomeScreen = ({}) => {
       content: [
         {
           name: '1',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '2',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '3',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '4',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '5',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '6',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '7',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '8',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '9',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },
         {
           name: '10',
-          image: 'test',
+          image: defaultImage,
           done: new Date(),
           stamp: 'star-outline',
         },

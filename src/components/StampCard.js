@@ -22,7 +22,7 @@ import {
 import GlobalColors from '../styles/GlobalColors';
 import bg from '../image/Download.jpeg';
 import Modal from 'react-native-modal-patch';
-const image = bg;
+
 const numCol = 3;
 const StampCard = ({item}) => {
   const [selectedItem, setSelectedItem] = useState(undefined);
@@ -37,7 +37,7 @@ const StampCard = ({item}) => {
     if (selectedItem === index) {
       setSelectedItem(undefined);
     } else {
-      console.log(item);
+      console.log('_showDetails', item);
       setSelectedItem(item);
     }
 
@@ -51,12 +51,16 @@ const StampCard = ({item}) => {
       {item.content.map((i, index) => (
         <>
           <Pressable
+            key={i.name + index}
             style={[styles.item]}
             onPress={() => {
               _showDetails(i, index);
             }}>
             {i.done !== false ? (
-              <Image source={image} style={styles.image} />
+              <Image
+                source={{uri: 'data:image/png;base64,' + i.image}}
+                style={styles.image}
+              />
             ) : (
               <View style={[styles.image, styles.stampItem]}>
                 {doneItems === index ? (
@@ -94,7 +98,14 @@ const StampCard = ({item}) => {
               <Card transparent>
                 <CardItem header first>
                   <Left>
-                    <Thumbnail large source={bg} />
+                    {selectedItem ? (
+                      <Thumbnail
+                        large
+                        source={{
+                          uri: 'data:image/png;base64,' + selectedItem.image,
+                        }}
+                      />
+                    ) : null}
                     <Body>
                       <Title style={{color: GlobalColors.dark}}>
                         {'Name des Events'}
@@ -128,6 +139,7 @@ const StampCard = ({item}) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   detail: {
     position: 'absolute',

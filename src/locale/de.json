@@ -2,5 +2,14 @@
   "APPTITLE": "Heppiventcard",
   "MEMBERCARD": "Membercard",
   "RANK": "Rang",
-  "NAME": "Name"
+  "NAME": "Name",
+  "RANK_0": "rang_0",
+  "RANK_2": "rang_2",
+  "RANK_5": "rang_5",
+  "RANK_10": "rang_10",
+  "RANK_15": "rang_15",
+  "RANK_20": "rang_20",
+  "NAME_PLACEHOLDER": "Schreib deinen Namen",
+  "WEBSITENAME": "Heppivents.de",
+  "INTERNET_INFO_TEXT": "Bitte überprüfe deine Internetverbindung"
 }

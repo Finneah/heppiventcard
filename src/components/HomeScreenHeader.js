@@ -4,11 +4,14 @@ import {Image, Pressable, StyleSheet} from 'react-native';
 import {strings} from '../i18n';
 import logo from '../image/logo.gif';
 import GlobalColors from '../styles/GlobalColors';
-const HomeScreenHeader = ({}) => {
+const HomeScreenHeader = (props) => {
   return (
     <Header>
       <Left>
-        <Pressable>
+        <Pressable
+          onPress={() => {
+            props.onPress();
+          }}>
           <Image source={logo} style={styles.logoImage} />
         </Pressable>
       </Left>

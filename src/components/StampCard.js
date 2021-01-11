@@ -58,11 +58,14 @@ const StampCard = ({item}) => {
             }}>
             {i.done !== false ? (
               <Image
+                key={i.name + index}
                 source={{uri: 'data:image/png;base64,' + i.image}}
                 style={styles.image}
               />
             ) : (
-              <View style={[styles.image, styles.stampItem]}>
+              <View
+                key={i.name + index}
+                style={[styles.image, styles.stampItem]}>
                 {doneItems === index ? (
                   <Icon style={{color: GlobalColors.brandPrimary}} name="add" />
                 ) : (

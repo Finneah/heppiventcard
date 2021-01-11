@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/HomeScreen';
 
 import {createStackNavigator} from '@react-navigation/stack';
 import {strings} from './src/i18n';
+import WebsiteScreen from './src/screens/WebsiteScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,13 @@ const App = () => {
             <Stack.Screen
               name="Home"
               component={HomeScreen}
+              options={{
+                headerTitle: strings('APPTITLE'),
+              }}
+            />
+            <Stack.Screen
+              name="Website"
+              component={WebsiteScreen}
               options={{
                 headerTitle: strings('APPTITLE'),
               }}

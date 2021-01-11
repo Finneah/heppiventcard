@@ -21,14 +21,16 @@ import RNFetchBlob from 'rn-fetch-blob';
 let imgUrl =
   'https://images.template.net/wp-content/uploads/2015/09/16233908/Dark-Wallpapers.jpg';
 const numCol = 3;
-const HomeScreen = ({}) => {
+
+const HomeScreen = ({navigation}) => {
+  console.log(navigation);
   const [cards, setCards] = useState([]);
   const [defaultImage, setDefaultImage] = useState(undefined);
   React.useLayoutEffect(() => {
     console.log('useLayoutEffect');
     RNFetchBlob.fetch('GET', imgUrl, {})
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setDefaultImage(res.data);
       })
       // Something went wrong:
@@ -182,7 +184,11 @@ const HomeScreen = ({}) => {
 
   return (
     <Container style={{padding: 5}}>
-      <HomeScreenHeader />
+      <HomeScreenHeader
+        onPress={() => {
+          navigation.navigate('Website');
+        }}
+      />
       <Content>
         <MemberCard />
         <Card>

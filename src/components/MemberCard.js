@@ -5,18 +5,36 @@ import GlobalColors from '../styles/GlobalColors';
 import {strings} from '../i18n';
 import {getData, storeData} from '../storage/AsyncStorage';
 const MemberCard = ({}) => {
-  const defaultMemberName = 'Your Name goes here';
+  const defaultMemberName = strings('NAME_PLACEHOLDER');
   const [memberName, setMemberName] = useState();
+  const [memberRank, setMemberRank] = useState();
 
-  // _setName();
   React.useLayoutEffect(() => {
-    _setName();
+    _getName();
+    _getRank();
   }, []);
 
-  async function _setName() {
+  async function _getName() {
     var name = await getData('NAME');
 
     setMemberName(name);
+  }
+
+  async function _getRank() {
+    var rank = await getData('RANK');
+
+    if (rank == null) {
+      rank = strings('RANK_0');
+      storeData('RANK', strings('RANK_0'));
+    }
+
+    setMemberRank(rank);
+    // var qrcode = {
+    //   url:
+    //     'https://previews.123rf.com/images/chrisdorney/chrisdorney1607/chrisdorney160700029/61360474-abgeschlossen-stempel-%C3%BCber-einen-wei%C3%9Fen-hintergrund-.jpg',
+    //   date: '2020-12-10',
+    //   description: 'Text blabla',
+    // };
   }
   function _renderContent() {
     return (
@@ -50,8 +68,8 @@ const MemberCard = ({}) => {
             <Input
               disabled
               style={styles.rankInput}
-              placeholder={'Gast'}
-              value={'Gast'}
+              placeholder={memberRank}
+              value={memberRank}
             />
           </Item>
         </Body>

@@ -11,5 +11,8 @@
   "RANK_20": "rang_20",
   "NAME_PLACEHOLDER": "Schreib deinen Namen",
   "WEBSITENAME": "Heppivents.de",
-  "INTERNET_INFO_TEXT": "Bitte überprüfe deine Internetverbindung"
+  "INTERNET_INFO_TEXT": "Bitte überprüfe deine Internetverbindung",
+  "SCAN_QR_CODE_NOW": "QR Code scannen",
+  "CANCEL": "Abbrechen",
+  "FINISH_CARD_TEXT": "FINISH_CARD_TEXT"
 }

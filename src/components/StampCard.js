@@ -22,17 +22,29 @@ import {
 import GlobalColors from '../styles/GlobalColors';
 import bg from '../image/Download.jpeg';
 import Modal from 'react-native-modal-patch';
-
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import {RNCamera} from 'react-native-camera';
+import {strings} from '../i18n';
+import RNFetchBlob from 'rn-fetch-blob';
+import {getData, storeData} from '../storage/AsyncStorage';
 const numCol = 3;
+
 const StampCard = ({item}) => {
+  const [stampCard, setStampCard] = useState(item);
   const [selectedItem, setSelectedItem] = useState(undefined);
   const [modalVisible, setModalVisible] = useState(false);
+  const [qrCodeModalVisible, setQRCodeModalVisible] = useState(false);
+  console.log(stampCard);
   var doneItems = 0;
-  item.content.forEach((content) => {
-    if (content.done !== false) {
-      doneItems++;
-    }
-  });
+  if (item.content) {
+    item.content.forEach((content) => {
+      console.log(content);
+      if (content.done !== 0) {
+        doneItems++;
+      }
+    });
+  }
+
   function _showDetails(item, index) {
     if (selectedItem === index) {
       setSelectedItem(undefined);
@@ -46,45 +58,100 @@ const StampCard = ({item}) => {
     }
   }
 
+  function _onSuccessReadQRCode(e) {
+    if (stampCard.content) {
+      stampCard.content.forEach((content) => {
+        if (JSON.stringify(content) === JSON.stringify(selectedItem)) {
+          var data = JSON.parse(e.data);
+          console.log(data);
+          RNFetchBlob.fetch('GET', data.url, {})
+            .then(async (res) => {
+              content.image = res;
+              content.description = data.description;
+              content.date = new Date(data.date);
+
+              // var allStampCards = await getData('STAMPCARDS');
+              // console.log(allStampCards);
+              // for (let i = 0; i < allStampCards.length; i++) {
+              //   const card = allStampCards[i];
+
+              //   if (card.title === stampCard.title) {
+              //     console.log(stampCard);
+              //     allStampCards[i] = stampCard;
+              //   }
+              // }
+            })
+
+            // Something went wrong:
+            .catch((errorMessage, statusCode) => {
+              // error handling
+              console.log(errorMessage, statusCode);
+            });
+        }
+      });
+    }
+
+    // var example = {
+    //   url:
+    //     'https://previews.123rf.com/images/chrisdorney/chrisdorney1607/chrisdorney16…1360474-abgeschlossen-stempel-%C3%BCber-einen-wei%C3%9Fen-hintergrund-.jpg',
+    //   date: '2020-12-10',
+    //   description: 'Textblabla',
+    // };
+
+    var x = JSON.parse(e.data);
+
+    setQRCodeModalVisible(false);
+  }
+
   return (
     <View style={styles.content}>
-      {item.content.map((i, index) => (
-        <>
-          <Pressable
-            key={i.name + index}
-            style={[styles.item]}
-            onPress={() => {
-              _showDetails(i, index);
-            }}>
-            {i.done !== false ? (
-              <Image
-                key={i.name + index}
-                source={{uri: 'data:image/png;base64,' + i.image}}
-                style={styles.image}
-              />
-            ) : (
-              <View
-                key={i.name + index}
-                style={[styles.image, styles.stampItem]}>
-                {doneItems === index ? (
-                  <Icon style={{color: GlobalColors.brandPrimary}} name="add" />
+      {item.content
+        ? item.content.map((i, index) => (
+            <>
+              <Pressable
+                key={(i.number + index).toString()}
+                style={[styles.item]}
+                onPress={() => {
+                  _showDetails(i, index);
+                }}>
+                {i.done !== 0 ? (
+                  <Image
+                    key={(i.number + index).toString()}
+                    source={{uri: 'data:image/png;base64,' + i.image}}
+                    style={styles.image}
+                  />
                 ) : (
-                  <Title style={{color: GlobalColors.brandPrimary}}>
-                    {i.name}
-                  </Title>
+                  <View
+                    key={(i.number + index).toString()}
+                    style={[styles.image, styles.stampItem]}>
+                    {doneItems === index ? (
+                      <Icon
+                        onPress={() => {
+                          console.log('open QR CODE');
+                          setQRCodeModalVisible(true);
+                          setSelectedItem(i);
+                        }}
+                        style={{color: GlobalColors.brandPrimary}}
+                        name="add"
+                      />
+                    ) : (
+                      <Title style={{color: GlobalColors.brandPrimary}}>
+                        {i.number.toString()}
+                      </Title>
+                    )}
+                  </View>
                 )}
-              </View>
-            )}
-          </Pressable>
-        </>
-      ))}
+              </Pressable>
+            </>
+          ))
+        : null}
       {item.finished ? (
         <View style={[styles.item, styles.lastItem]}>
           <Image source={item.finishedIcon} style={styles.image} />
         </View>
       ) : (
         <View style={[styles.item, styles.lastItem]}>
-          <Text>{'Lorem Ipsum'}</Text>
+          <Text>{strings('FINISH_CARD_TEXT')}</Text>
         </View>
       )}
 
@@ -138,6 +205,32 @@ const StampCard = ({item}) => {
             </View>
           </View>
         </TouchableWithoutFeedback>
+      </Modal>
+
+      <Modal
+        transparent
+        animationType="slide"
+        presentationStyle="overFullScreen" // <-- Swipe down/dismiss works now!
+        visible={qrCodeModalVisible}
+        onDismiss={() => setQRCodeModalVisible(false)} // <-- This gets called all the time
+        onRequestClose={() => setQRCodeModalVisible(false)}>
+        <QRCodeScanner
+          onRead={_onSuccessReadQRCode.bind(this)}
+          flashMode={RNCamera.Constants.FlashMode.torch}
+          topContent={
+            <Text style={styles.centerText}>{strings('SCAN_QR_CODE_NOW')}</Text>
+          }
+          bottomContent={
+            <Button
+              full
+              transparent
+              onPress={() => {
+                setQRCodeModalVisible(false);
+              }}>
+              <Text>{strings('CANCEL')}</Text>
+            </Button>
+          }
+        />
       </Modal>
     </View>
   );

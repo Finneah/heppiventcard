@@ -22,9 +22,11 @@
     "native-base": "^2.13.15",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-camera": "^3.41.0",
     "react-native-i18n": "^2.0.15",
     "react-native-modal": "^11.5.6",
     "react-native-modal-patch": "git+https://github.com/HarvestProfit/react-native-modal-patch.git",
+    "react-native-permissions": "^3.0.0",
     "react-native-qrcode-scanner": "^1.5.1",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.16.1",
@@ -32,7 +34,8 @@
     "react-native-webview": "^11.0.2",
     "react-navigation": "^4.4.3",
     "react-navigation-stack": "^2.10.2",
-    "rn-fetch-blob": "^0.12.0"
+    "rn-fetch-blob": "^0.12.0",
+    "vasern": "^0.3.68"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

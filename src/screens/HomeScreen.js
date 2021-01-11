@@ -15,167 +15,95 @@ import GlobalColors from '../styles/GlobalColors';
 import HomeScreenHeader from '../components/HomeScreenHeader';
 import MemberCard from '../components/MemberCard';
 import StampCard from '../components/StampCard';
-
+import {getData, storeData, removeItem} from '../storage/AsyncStorage';
 import RNFetchBlob from 'rn-fetch-blob';
-
+import {StampCards, Stamps, User} from '../database';
+import {StampCardsModel} from '../database/Models/StampCardsModel';
+import {StampsModel} from '../database/Models/StampsModel';
+import {UserModel} from '../database/Models/UserModel';
+let stampCardsModel = new StampCardsModel();
+let stampsModel = new StampsModel();
+let userModel = new UserModel();
 let imgUrl =
   'https://images.template.net/wp-content/uploads/2015/09/16233908/Dark-Wallpapers.jpg';
 const numCol = 3;
 
 const HomeScreen = ({navigation}) => {
-  console.log(navigation);
   const [cards, setCards] = useState([]);
   const [defaultImage, setDefaultImage] = useState(undefined);
   React.useLayoutEffect(() => {
     console.log('useLayoutEffect');
-    RNFetchBlob.fetch('GET', imgUrl, {})
-      .then((res) => {
-        // console.log(res);
-        setDefaultImage(res.data);
-      })
-      // Something went wrong:
-      .catch((errorMessage, statusCode) => {
-        // error handling
-        console.log(errorMessage, statusCode);
-      });
   }, []);
   React.useEffect(() => {
+    // Stamps.perform(function (db) {
+    //   Stamps.data().forEach(function (item) {
+    //     db.remove(item);
+    //   });
+    // });
+
+    // StampCards.perform(function (db) {
+    //   StampCards.data().forEach(function (item) {
+    //     db.remove(item);
+    //   });
+    // });
+
     console.log('useEffect');
-    _getStampCards();
+    StampCards.onLoaded(() => {
+      console.info('StampCards loaded');
+    });
+    Stamps.onLoaded(() => {
+      console.info('Stamps loaded');
+
+      _getStampCards();
+    });
+
+    Stamps.onChange(() => {
+      console.info('Stamps changed');
+      _getStampCards();
+    });
   }, []);
 
-  function _getStampCards() {
+  async function _getStampCards() {
     /**
      * DB LOAD STAMPCARD
      */
+    var sections = [];
 
-    var stampCard1 = {
+    if (StampCards.data().length === 0) {
+      await createFirstStampCard();
+    }
+
+    StampCards.data().forEach((stampCard) => {
+      var sectionPart = stampCard;
+      var stamps = stampsModel.filterStampsBy({
+        stampCard: stampCard.id,
+      });
+      sectionPart.content = stamps;
+
+      sections.push(sectionPart);
+    });
+
+    setCards(sections);
+  }
+
+  function createFirstStampCard(params) {
+    var stampcard = {
+      date_of_creation: new Date(),
       title: 'Aktuelle Stempelkarte',
-      finished: false,
-      finishedIcon: undefined,
-      content: [
-        {
-          name: '1',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '2',
-          image: defaultImage,
-          done: false,
-        },
-        {
-          name: '3',
-          image: defaultImage,
-          done: false,
-        },
-        {
-          name: '4',
-          image: defaultImage,
-          done: false,
-        },
-        {
-          name: '5',
-          image: defaultImage,
-          done: false,
-        },
-        {
-          name: '6',
-          image: defaultImage,
-          done: false,
-        },
-        {
-          name: '7',
-          image: defaultImage,
-          done: false,
-        },
-        {
-          name: '8',
-          image: defaultImage,
-          done: false,
-        },
-        {
-          name: '9',
-          image: defaultImage,
-          done: false,
-        },
-        {
-          name: '10',
-          image: defaultImage,
-          done: false,
-        },
-      ],
+      complete: false,
     };
-    var stampCard2 = {
-      title: 'Stempelkarte 2',
-      finished: true,
-      finishedIcon: bg,
-      content: [
-        {
-          name: '1',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '2',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '3',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '4',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '5',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '6',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '7',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '8',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '9',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-        {
-          name: '10',
-          image: defaultImage,
-          done: new Date(),
-          stamp: 'star-outline',
-        },
-      ],
-    };
+    var card = StampCards.insert(stampcard, true)[0];
 
-    setCards([stampCard1, stampCard2]);
+    var stamps = [];
+    for (let i = 1; i <= 10; i++) {
+      stamps.push({
+        number: i,
+        done: 0,
+        stampCard: card,
+      });
+    }
+
+    Stamps.insert(stamps, true);
   }
 
   function _renderContent(item) {

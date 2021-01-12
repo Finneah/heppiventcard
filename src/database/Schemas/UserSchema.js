@@ -1,7 +1,7 @@
 export class UserSchema {
   name = 'User';
   props = {
-    name: 'string',
+    name: '?string',
     rank: 'string',
   };
 }

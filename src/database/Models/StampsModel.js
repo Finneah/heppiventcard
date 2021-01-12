@@ -13,6 +13,7 @@ export class StampsModel {
 
   filterStampsBy = (filterObject) => {
     let stampsQueryObj = new Queryable(Stamps.data());
+
     return stampsQueryObj.filter(filterObject).data();
   };
 }

@@ -21,16 +21,15 @@ import {StampCards, Stamps, User} from '../database';
 import {StampCardsModel} from '../database/Models/StampCardsModel';
 import {StampsModel} from '../database/Models/StampsModel';
 import {UserModel} from '../database/Models/UserModel';
+import {strings} from '../i18n';
 let stampCardsModel = new StampCardsModel();
 let stampsModel = new StampsModel();
 let userModel = new UserModel();
-let imgUrl =
-  'https://images.template.net/wp-content/uploads/2015/09/16233908/Dark-Wallpapers.jpg';
 const numCol = 3;
 
 const HomeScreen = ({navigation}) => {
   const [cards, setCards] = useState([]);
-  const [defaultImage, setDefaultImage] = useState(undefined);
+
   React.useLayoutEffect(() => {
     console.log('useLayoutEffect');
   }, []);
@@ -46,44 +45,87 @@ const HomeScreen = ({navigation}) => {
     //     db.remove(item);
     //   });
     // });
-
+    User.onLoaded(async () => {
+      console.info('User loaded');
+      if (User.data().length === 0) {
+        User.insert({name: '', rank: strings('RANK_0')});
+      }
+    });
     console.log('useEffect');
     StampCards.onLoaded(() => {
       console.info('StampCards loaded');
     });
-    Stamps.onLoaded(() => {
+    Stamps.onLoaded(async () => {
       console.info('Stamps loaded');
+      if (StampCards.data().length === 0) {
+        await createFirstStampCard();
+      }
 
-      _getStampCards();
-    });
-
-    Stamps.onChange(() => {
-      console.info('Stamps changed');
       _getStampCards();
     });
   }, []);
 
+  React.useEffect(() => {
+    Stamps.onChange(() => {
+      console.info('Stamps changed');
+      _getStampCards();
+    });
+  }, [cards]);
+
   async function _getStampCards() {
-    /**
-     * DB LOAD STAMPCARD
-     */
     var sections = [];
 
-    if (StampCards.data().length === 0) {
-      await createFirstStampCard();
-    }
-
-    StampCards.data().forEach((stampCard) => {
+    StampCards.data().forEach(async (stampCard) => {
       var sectionPart = stampCard;
       var stamps = stampsModel.filterStampsBy({
-        stampCard: stampCard.id,
+        stampCard_id: stampCard.id,
       });
+
       sectionPart.content = stamps;
 
       sections.push(sectionPart);
     });
 
     setCards(sections);
+    _checkStampCount();
+  }
+
+  function _checkStampCount() {
+    var stamps = stampsModel.filterStampsBy({
+      done: 1,
+    });
+    console.log('count = ' + stamps.length);
+    var user = User.data()[0];
+    switch (stamps.length) {
+      case 0:
+        user.rank = 'RANK_0';
+        User.update(user, true);
+        break;
+      case 2:
+        user.rank = 'RANK_2';
+        User.update(user, true);
+        break;
+      case 5:
+        user.rank = 'RANK_5';
+        User.update(user, true);
+        break;
+      case 10:
+        user.rank = 'RANK_10';
+        User.update(user, true);
+        break;
+      case 15:
+        user.rank = 'RANK_15';
+        User.update(user, true);
+        break;
+
+      case 20:
+        user.rank = 'RANK_20';
+        User.update(user, true);
+        break;
+
+      default:
+        break;
+    }
   }
 
   function createFirstStampCard(params) {

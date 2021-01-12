@@ -26,7 +26,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import {strings} from '../i18n';
 import RNFetchBlob from 'rn-fetch-blob';
-import {getData, storeData} from '../storage/AsyncStorage';
+import {StampCards, Stamps, User} from '../database';
 const numCol = 3;
 
 const StampCard = ({item}) => {
@@ -34,11 +34,10 @@ const StampCard = ({item}) => {
   const [selectedItem, setSelectedItem] = useState(undefined);
   const [modalVisible, setModalVisible] = useState(false);
   const [qrCodeModalVisible, setQRCodeModalVisible] = useState(false);
-  console.log(stampCard);
+
   var doneItems = 0;
   if (item.content) {
     item.content.forEach((content) => {
-      console.log(content);
       if (content.done !== 0) {
         doneItems++;
       }
@@ -59,37 +58,29 @@ const StampCard = ({item}) => {
   }
 
   function _onSuccessReadQRCode(e) {
-    if (stampCard.content) {
-      stampCard.content.forEach((content) => {
-        if (JSON.stringify(content) === JSON.stringify(selectedItem)) {
-          var data = JSON.parse(e.data);
-          console.log(data);
-          RNFetchBlob.fetch('GET', data.url, {})
-            .then(async (res) => {
-              content.image = res;
-              content.description = data.description;
-              content.date = new Date(data.date);
+    var data = JSON.parse(e.data);
+    console.log(data);
+    RNFetchBlob.fetch('GET', data.url, {})
+      .then((res) => {
+        let status = res.info().status;
 
-              // var allStampCards = await getData('STAMPCARDS');
-              // console.log(allStampCards);
-              // for (let i = 0; i < allStampCards.length; i++) {
-              //   const card = allStampCards[i];
-
-              //   if (card.title === stampCard.title) {
-              //     console.log(stampCard);
-              //     allStampCards[i] = stampCard;
-              //   }
-              // }
-            })
-
-            // Something went wrong:
-            .catch((errorMessage, statusCode) => {
-              // error handling
-              console.log(errorMessage, statusCode);
-            });
+        if (status === 200) {
+          selectedItem.image = res.data;
+          selectedItem.description = data.description;
+          selectedItem.date = new Date(data.date);
+          selectedItem.done = 1;
+          selectedItem.name = data.name;
+          Stamps.update(selectedItem, true);
+        } else {
+          // handle other status codes
         }
+      })
+
+      // Something went wrong:
+      .catch((errorMessage, statusCode) => {
+        // error handling
+        console.info(errorMessage, statusCode);
       });
-    }
 
     // var example = {
     //   url:
@@ -112,6 +103,7 @@ const StampCard = ({item}) => {
                 key={(i.number + index).toString()}
                 style={[styles.item]}
                 onPress={() => {
+                  console.log(i, index);
                   _showDetails(i, index);
                 }}>
                 {i.done !== 0 ? (
@@ -127,7 +119,6 @@ const StampCard = ({item}) => {
                     {doneItems === index ? (
                       <Icon
                         onPress={() => {
-                          console.log('open QR CODE');
                           setQRCodeModalVisible(true);
                           setSelectedItem(i);
                         }}
@@ -178,16 +169,19 @@ const StampCard = ({item}) => {
                     ) : null}
                     <Body>
                       <Title style={{color: GlobalColors.dark}}>
-                        {'Name des Events'}
+                        {selectedItem ? selectedItem.name : ''}
                       </Title>
+                      <Text note>
+                        {selectedItem
+                          ? selectedItem.date.toLocaleDateString()
+                          : ''}
+                      </Text>
                     </Body>
                   </Left>
                 </CardItem>
                 <CardItem cardBody>
                   <Text note>
-                    {
-                      'Das sind nicht die Droiden die Ihr sucht. Das sind nicht die Droiden die Ihr sucht. Das sind nicht die Droiden die Ihr sucht'
-                    }
+                    {selectedItem ? selectedItem.description : ''}
                   </Text>
                 </CardItem>
                 <CardItem footer last>
@@ -198,7 +192,7 @@ const StampCard = ({item}) => {
                     onPress={() => {
                       setModalVisible(false);
                     }}>
-                    <Text>{'close'}</Text>
+                    <Text>{strings('CLOSE')}</Text>
                   </Button>
                 </CardItem>
               </Card>
@@ -208,35 +202,54 @@ const StampCard = ({item}) => {
       </Modal>
 
       <Modal
-        transparent
         animationType="slide"
         presentationStyle="overFullScreen" // <-- Swipe down/dismiss works now!
         visible={qrCodeModalVisible}
         onDismiss={() => setQRCodeModalVisible(false)} // <-- This gets called all the time
         onRequestClose={() => setQRCodeModalVisible(false)}>
-        <QRCodeScanner
-          onRead={_onSuccessReadQRCode.bind(this)}
-          flashMode={RNCamera.Constants.FlashMode.torch}
-          topContent={
-            <Text style={styles.centerText}>{strings('SCAN_QR_CODE_NOW')}</Text>
-          }
-          bottomContent={
-            <Button
-              full
-              transparent
-              onPress={() => {
-                setQRCodeModalVisible(false);
-              }}>
-              <Text>{strings('CANCEL')}</Text>
-            </Button>
-          }
-        />
+        <View style={{padding: 20, flex: 1, flexDirection: 'column'}}>
+          <Card>
+            <CardItem first last>
+              <Left>
+                <Body>
+                  <Text>{strings('SCAN_QR_CODE_NOW')}</Text>
+                  <Text note>{strings('QR_CODE_DESCRIPTION')}</Text>
+                </Body>
+              </Left>
+            </CardItem>
+          </Card>
+
+          <QRCodeScanner
+            // cameraStyle={{
+            //   alignSelf: 'center',
+            // }}
+            // containerStyle={{flex: 1}}
+            fadeIn={true}
+            onRead={_onSuccessReadQRCode.bind(this)}
+            flashMode={RNCamera.Constants.FlashMode.torch}
+            topContent={null}
+            bottomContent={null}
+          />
+          <Button
+            centered
+            rounded
+            onPress={() => {
+              setQRCodeModalVisible(false);
+            }}>
+            <Text>{strings('CANCEL')}</Text>
+          </Button>
+        </View>
       </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  centerText: {
+    flex: 1,
+    color: '#777',
+    alignSelf: 'center',
+  },
   detail: {
     position: 'absolute',
     top: 0,
@@ -287,9 +300,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 22,
+    paddingTop: 22,
+    backgroundColor: GlobalColors.dark_opacity,
   },
   modalView: {
+    minHeight: Dimensions.get('screen').height * 0.4,
+    width: Dimensions.get('screen').width,
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

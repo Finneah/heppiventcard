@@ -5,6 +5,7 @@ const GlobalColors = {
   dark_opacity: 'rgba(51,51,51,0.5)',
   brown: 'rgba(131,92,59,0.4)',
   lightGrey: '#F8F8F8',
+  white: '#fff',
 };
 
 export default GlobalColors;

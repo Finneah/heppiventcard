@@ -1,155 +1,124 @@
 import React, {useState} from 'react';
 import {
   Accordion,
+  Button,
   Card,
   CardItem,
   Container,
   Content,
-  Icon,
   Text,
-  Title,
 } from 'native-base';
-import {Dimensions, View, Image, StyleSheet} from 'react-native';
-import bg from '../image/Download.jpeg';
+import {Dimensions, StyleSheet} from 'react-native';
+
 import GlobalColors from '../styles/GlobalColors';
 import HomeScreenHeader from '../components/HomeScreenHeader';
 import MemberCard from '../components/MemberCard';
 import StampCard from '../components/StampCard';
-import {getData, storeData, removeItem} from '../storage/AsyncStorage';
-import RNFetchBlob from 'rn-fetch-blob';
-import {StampCards, Stamps, User} from '../database';
-import {StampCardsModel} from '../database/Models/StampCardsModel';
-import {StampsModel} from '../database/Models/StampsModel';
-import {UserModel} from '../database/Models/UserModel';
-import {strings} from '../i18n';
-let stampCardsModel = new StampCardsModel();
-let stampsModel = new StampsModel();
-let userModel = new UserModel();
-const numCol = 3;
 
+import {StampCards, Stamps} from '../database';
+
+import {StampsModel} from '../database/Models/StampsModel';
+
+let stampsModel = new StampsModel();
+
+const numCol = 3;
+const TEST = false;
 const HomeScreen = ({navigation}) => {
   const [cards, setCards] = useState([]);
 
   React.useLayoutEffect(() => {
-    console.log('useLayoutEffect');
-  }, []);
-  React.useEffect(() => {
-    // Stamps.perform(function (db) {
-    //   Stamps.data().forEach(function (item) {
-    //     db.remove(item);
-    //   });
-    // });
-
-    // StampCards.perform(function (db) {
-    //   StampCards.data().forEach(function (item) {
-    //     db.remove(item);
-    //   });
-    // });
-    User.onLoaded(async () => {
-      console.info('User loaded');
-      if (User.data().length === 0) {
-        User.insert({name: '', rank: strings('RANK_0')});
+    StampCards.onLoaded(async () => {
+      if (TEST) {
+        console.info('StampCards loaded', StampCards.data());
       }
-    });
-    console.log('useEffect');
-    StampCards.onLoaded(() => {
-      console.info('StampCards loaded');
-    });
-    Stamps.onLoaded(async () => {
-      console.info('Stamps loaded');
       if (StampCards.data().length === 0) {
         await createFirstStampCard();
       }
-
-      _getStampCards();
     });
+
+    StampCards.onChange(async () => {
+      if (TEST) {
+        console.info('StampCards changed', StampCards.data());
+      }
+    });
+
+    Stamps.onLoaded(async () => {
+      if (TEST) {
+        console.info('Stamps loaded', Stamps.data());
+      }
+
+      _getStampCards(StampCards.data());
+    });
+
+    Stamps.onChange(async () => {
+      if (TEST) {
+        console.info('Stamps loaded', Stamps.data());
+      }
+
+      _getStampCards(StampCards.data());
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    Stamps.onChange(() => {
-      console.info('Stamps changed');
-      _getStampCards();
+  async function deleteAll() {
+    await StampCards.perform(function (db) {
+      StampCards.data().forEach(function (item) {
+        db.remove(item);
+      });
     });
-  }, [cards]);
+    await Stamps.perform(function (db) {
+      Stamps.data().forEach(function (item) {
+        db.remove(item);
+      });
+    });
 
-  async function _getStampCards() {
+    await createFirstStampCard();
+  }
+
+  async function _getStampCards(sectionStampCards) {
     var sections = [];
-
-    StampCards.data().forEach(async (stampCard) => {
+    if (TEST) {
+      console.info('_getStampCards', sectionStampCards, Stamps.data());
+    }
+    sectionStampCards.forEach(async (stampCard) => {
       var sectionPart = stampCard;
-      var stamps = stampsModel.filterStampsBy({
+      sectionPart.title =
+        stampCard.title === '' ? 'Aktuelle Stempelkarte' : stampCard.title;
+      var content = stampsModel.filterStampsBy({
         stampCard_id: stampCard.id,
       });
+      if (content.length === 0) {
+        content = stampsModel.filterStampsBy({
+          stampCard: stampCard.id,
+        });
+      }
 
-      sectionPart.content = stamps;
-
+      sectionPart.content = content;
       sections.push(sectionPart);
     });
 
     setCards(sections);
-    _checkStampCount();
   }
 
-  function _checkStampCount() {
-    var stamps = stampsModel.filterStampsBy({
-      done: 1,
-    });
-    console.log('count = ' + stamps.length);
-    var user = User.data()[0];
-    switch (stamps.length) {
-      case 0:
-        user.rank = 'RANK_0';
-        User.update(user, true);
-        break;
-      case 2:
-        user.rank = 'RANK_2';
-        User.update(user, true);
-        break;
-      case 5:
-        user.rank = 'RANK_5';
-        User.update(user, true);
-        break;
-      case 10:
-        user.rank = 'RANK_10';
-        User.update(user, true);
-        break;
-      case 15:
-        user.rank = 'RANK_15';
-        User.update(user, true);
-        break;
-
-      case 20:
-        user.rank = 'RANK_20';
-        User.update(user, true);
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  function createFirstStampCard(params) {
-    var stampcard = {
+  async function createFirstStampCard() {
+    var newStampCard = {
       date_of_creation: new Date(),
-      title: 'Aktuelle Stempelkarte',
+      title: '',
       complete: false,
     };
-    var card = StampCards.insert(stampcard, true)[0];
+    var card = await StampCards.insert(newStampCard, true)[0];
 
-    var stamps = [];
+    var newStamps = [];
     for (let i = 1; i <= 10; i++) {
-      stamps.push({
+      newStamps.push({
         number: i,
         done: 0,
         stampCard: card,
       });
     }
 
-    Stamps.insert(stamps, true);
-  }
-
-  function _renderContent(item) {
-    return <StampCard item={item} />;
+    await Stamps.insert(newStamps, true);
   }
 
   return (
@@ -160,6 +129,9 @@ const HomeScreen = ({navigation}) => {
         }}
       />
       <Content>
+        {/* <Button onPress={() => deleteAll()}>
+          <Text>{'DELETE'}</Text>
+        </Button> */}
         <MemberCard />
         <Card>
           <CardItem first last>
@@ -173,7 +145,13 @@ const HomeScreen = ({navigation}) => {
               expandedIcon="chevron-down"
               iconStyle={{color: GlobalColors.brandPrimary}}
               expandedIconStyle={{color: GlobalColors.brandSecondary}}
-              renderContent={_renderContent}
+              renderContent={(item) => {
+                if (TEST) {
+                  console.log('renderContent', item);
+                }
+
+                return <StampCard item={item} />;
+              }}
             />
           </CardItem>
         </Card>

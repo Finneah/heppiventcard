@@ -6,7 +6,7 @@ import logo from '../image/logo.gif';
 import GlobalColors from '../styles/GlobalColors';
 const HomeScreenHeader = (props) => {
   return (
-    <Header>
+    <Header transparent>
       <Left>
         <Pressable
           onPress={() => {

@@ -4,7 +4,7 @@ export class StampsSchema {
     number: 'int',
     name: '?string',
     image: '?string',
-    done: 'int',
+    done: 'boolean',
     date: '?datetime',
     description: '?string',
     stampCard: '#StampCards',

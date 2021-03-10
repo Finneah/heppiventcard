@@ -1,50 +1,114 @@
 import {Accordion, Body, Card, CardItem, Input, Item, Label} from 'native-base';
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {Dimensions, ImageBackground, StyleSheet} from 'react-native';
 import GlobalColors from '../styles/GlobalColors';
 import {strings} from '../i18n';
-import {getData, storeData} from '../storage/AsyncStorage';
+
+import {Stamps, User} from '../database';
+import {StampsModel} from '../database/Models/StampsModel';
+import GoldImage from '../image/Gold.jpg';
+let stampsModel = new StampsModel();
 const MemberCard = ({}) => {
   const defaultMemberName = strings('NAME_PLACEHOLDER');
-  const [memberName, setMemberName] = useState();
-  const [memberRank, setMemberRank] = useState();
-
+  const [user, setUser] = useState({name: '', rank: 0});
   React.useLayoutEffect(() => {
-    _getName();
-    _getRank();
+    // User.perform(function (db) {
+    //   User.data().forEach(function (item) {
+    //     db.remove(item);
+    //   });
+    // });
+
+    User.onLoaded(async () => {
+      try {
+        if (User.data().length === 0) {
+          var newUser = {name: '', rank: 0};
+          User.insert(newUser);
+          setUser(newUser);
+        } else {
+          _setUser(User.data()[0]);
+        }
+      } catch (error) {
+        console.info(error);
+      }
+    });
+    User.onChange(() => {
+      try {
+        _setUser(User.data()[0]);
+      } catch (error) {
+        console.info(error);
+      }
+    });
+    Stamps.onChange(() => {
+      try {
+        _checkStampCount();
+      } catch (error) {
+        console.info(error);
+      }
+    });
   }, []);
 
-  async function _getName() {
-    var name = await getData('NAME');
+  function _checkStampCount() {
+    var stamps = stampsModel.filterStampsBy({
+      done: 1,
+    });
 
-    setMemberName(name);
-  }
-
-  async function _getRank() {
-    var rank = await getData('RANK');
-
-    if (rank == null) {
-      rank = strings('RANK_0');
-      storeData('RANK', strings('RANK_0'));
+    if (stamps.length === 0) {
+      stamps = stampsModel.filterStampsBy({
+        done: true,
+      });
     }
 
-    setMemberRank(rank);
-    // var qrcode = {
-    //   url:
-    //     'https://previews.123rf.com/images/chrisdorney/chrisdorney1607/chrisdorney160700029/61360474-abgeschlossen-stempel-%C3%BCber-einen-wei%C3%9Fen-hintergrund-.jpg',
-    //   date: '2020-12-10',
-    //   description: 'Text blabla',
-    // };
+    var user = User.data()[0];
+    if (user) {
+      user.rank = stamps.length;
+      User.update(user.id, user, true);
+    }
   }
+
+  function _setUser(this_user) {
+    try {
+      setUser({
+        name: this_user.name ? this_user.name : '',
+        rank: this_user.rank,
+      });
+    } catch (error) {
+      console.info(error);
+    }
+  }
+
+  function _getRank() {
+    /**
+     * "RANK_0": "Gast",
+     * "RANK_3": "Stammgast",
+     * "RANK_10": "Mitglied",
+     * "RANK_15": "Stammmitglied",
+     * "RANK_20": "Familienmitglied",
+     */
+    var rank = user.rank;
+    if (rank >= 20) {
+      return strings('RANK_20');
+    } else if (rank >= 15) {
+      return strings('RANK_15');
+    } else if (rank >= 10) {
+      return strings('RANK_10');
+    } else if (rank >= 3) {
+      return strings('RANK_03');
+    } else {
+      return strings('RANK_00');
+    }
+  }
+
   function _renderContent() {
     return (
-      <CardItem style={styles.cardItemStyle}>
+      <CardItem style={{backgroundColor: 'transparent'}}>
         <Body>
           <Item
             // eslint-disable-next-line react-native/no-inline-styles
             style={{
               borderColor:
-                memberName === '' ? GlobalColors.brandPrimary : 'transparent',
+                user && user.name === ''
+                  ? GlobalColors.brandPrimary
+                  : 'transparent',
             }}
             inlineLabel>
             <Label style={{color: GlobalColors.brandPrimary}}>
@@ -54,22 +118,27 @@ const MemberCard = ({}) => {
               style={styles.nameInput}
               placeholder={defaultMemberName}
               placeholderTextColor={GlobalColors.brown}
-              value={memberName}
+              value={user ? user.name : ''}
               onChangeText={(text) => {
-                storeData('NAME', text);
-                setMemberName(text);
+                /**
+                 * @todo update User
+                 *
+                 */
+
+                User.update(user.id, {...user, name: text}, true);
+                setUser({...user, name: text});
               }}
             />
           </Item>
-          <Item style={styles.transparentBorder} inlineLabel>
+          <Item style={[styles.transparentBorder]} inlineLabel>
             <Label style={{color: GlobalColors.brandPrimary}}>
               {strings('RANK')}
             </Label>
             <Input
               disabled
               style={styles.rankInput}
-              placeholder={memberRank}
-              value={memberRank}
+              placeholder={strings('RANK_00')}
+              value={_getRank()}
             />
           </Item>
         </Body>
@@ -79,7 +148,7 @@ const MemberCard = ({}) => {
 
   return (
     <Card>
-      <CardItem first last>
+      <CardItem first last style={{backgroundColor: 'transparent'}}>
         <Accordion
           style={styles.transparentBorder}
           dataArray={[{title: strings('MEMBERCARD')}]}
@@ -97,23 +166,24 @@ const MemberCard = ({}) => {
   );
 };
 const styles = StyleSheet.create({
-  cardItemStyle: {
-    alignContent: 'center',
-    justifyContent: 'center',
-    // backgroundColor: GlobalColors.brown,
-  },
   nameInput: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: GlobalColors.brandPrimary,
   },
   rankInput: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: GlobalColors.brandSecondary,
   },
   transparentBorder: {
     borderColor: 'transparent',
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'contain',
+    justifyContent: 'center',
+    opacity: 0.5,
   },
 });
 export default MemberCard;

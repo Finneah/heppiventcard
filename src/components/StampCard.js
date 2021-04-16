@@ -46,12 +46,14 @@ const StampCard = (props) => {
   }, []);
 
   function _checkDoneItems() {
+    console.log('_checkDoneItems');
     var done = 0;
     if (stampCard.content) {
       stampCard.content.forEach((content) => {
         if (content.done === 1 || content.done === true) {
           done++;
           setDoneItems(done);
+          console.log('doneItem', done);
         }
       });
     }
@@ -153,7 +155,7 @@ const StampCard = (props) => {
     var stampCardItems = null;
     if (stampCard?.content) {
       stampCardItems = stampCard.content.map((stamp, index) => (
-        <>
+        <View key={(stamp.number + index).toString()}>
           {stamp.done === 1 || stamp.done === true ? (
             <Pressable
               key={(stamp.number + index).toString()}
@@ -188,7 +190,7 @@ const StampCard = (props) => {
               )}
             </View>
           )}
-        </>
+        </View>
       ));
     }
 
@@ -256,6 +258,7 @@ const StampCard = (props) => {
                     style={{marginTop: 10}}
                     centered
                     rounded
+                    primary
                     onPress={() => {
                       setModalVisible(false);
                     }}>
@@ -299,6 +302,7 @@ const StampCard = (props) => {
             bottomContent={null}
           />
           <Button
+            primary
             centered
             rounded
             onPress={() => {

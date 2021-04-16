@@ -1,12 +1,12 @@
 import {Accordion, Body, Card, CardItem, Input, Item, Label} from 'native-base';
 import React, {useState} from 'react';
-import {Dimensions, ImageBackground, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import GlobalColors from '../styles/GlobalColors';
 import {strings} from '../i18n';
 
 import {Stamps, User} from '../database';
 import {StampsModel} from '../database/Models/StampsModel';
-import GoldImage from '../image/Gold.jpg';
+
 let stampsModel = new StampsModel();
 const MemberCard = ({}) => {
   const defaultMemberName = strings('NAME_PLACEHOLDER');
@@ -25,6 +25,7 @@ const MemberCard = ({}) => {
           User.insert(newUser);
           setUser(newUser);
         } else {
+          console.log('onLoaded _setUser', User.data()[0]);
           _setUser(User.data()[0]);
         }
       } catch (error) {
@@ -33,6 +34,7 @@ const MemberCard = ({}) => {
     });
     User.onChange(() => {
       try {
+        console.log('onChange _setUser', User.data()[0]);
         _setUser(User.data()[0]);
       } catch (error) {
         console.info(error);
@@ -40,6 +42,7 @@ const MemberCard = ({}) => {
     });
     Stamps.onChange(() => {
       try {
+        console.log('Stamps onChange');
         _checkStampCount();
       } catch (error) {
         console.info(error);
@@ -48,20 +51,32 @@ const MemberCard = ({}) => {
   }, []);
 
   function _checkStampCount() {
-    var stamps = stampsModel.filterStampsBy({
-      done: 1,
-    });
-
-    if (stamps.length === 0) {
-      stamps = stampsModel.filterStampsBy({
-        done: true,
+    try {
+      var stamps = stampsModel.filterStampsBy({
+        done: 1,
       });
-    }
 
-    var user = User.data()[0];
-    if (user) {
-      user.rank = stamps.length;
-      User.update(user.id, user, true);
+      if (stamps.length === 0) {
+        stamps = stampsModel.filterStampsBy({
+          done: true,
+        });
+      }
+
+      var user = User.data()[0];
+      console.log(user);
+      if (user) {
+        console.log(
+          User.data(),
+          User.data()[0],
+          user.rank,
+          stamps.length,
+          'test',
+        );
+        // user.rank = stamps.length;
+        // User.update(user.id, user, true);
+      }
+    } catch (error) {
+      console.info(error);
     }
   }
 
@@ -85,22 +100,25 @@ const MemberCard = ({}) => {
      * "RANK_20": "Familienmitglied",
      */
     var rank = user.rank;
-    if (rank >= 20) {
-      return strings('RANK_20');
-    } else if (rank >= 15) {
-      return strings('RANK_15');
-    } else if (rank >= 10) {
-      return strings('RANK_10');
-    } else if (rank >= 3) {
-      return strings('RANK_03');
-    } else {
-      return strings('RANK_00');
+    console.log('rank', rank);
+    if (rank) {
+      if (rank >= 20) {
+        return strings('RANK_20');
+      } else if (rank >= 15) {
+        return strings('RANK_15');
+      } else if (rank >= 10) {
+        return strings('RANK_10');
+      } else if (rank >= 3) {
+        return strings('RANK_03');
+      } else {
+        return strings('RANK_00');
+      }
     }
   }
 
   function _renderContent() {
     return (
-      <CardItem style={{backgroundColor: 'transparent'}}>
+      <CardItem>
         <Body>
           <Item
             // eslint-disable-next-line react-native/no-inline-styles
@@ -148,7 +166,7 @@ const MemberCard = ({}) => {
 
   return (
     <Card>
-      <CardItem first last style={{backgroundColor: 'transparent'}}>
+      <CardItem first last>
         <Accordion
           style={styles.transparentBorder}
           dataArray={[{title: strings('MEMBERCARD')}]}

@@ -8,7 +8,7 @@ import {
   Content,
   Text,
 } from 'native-base';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, Linking, StyleSheet} from 'react-native';
 
 import GlobalColors from '../styles/GlobalColors';
 import HomeScreenHeader from '../components/HomeScreenHeader';
@@ -125,7 +125,9 @@ const HomeScreen = ({navigation}) => {
     <Container style={{padding: 5}}>
       <HomeScreenHeader
         onPress={() => {
-          navigation.navigate('Website');
+          Linking.openURL('http://heppivents.de/').catch((err) =>
+            console.error('An error occured', err),
+          );
         }}
       />
       <Content>

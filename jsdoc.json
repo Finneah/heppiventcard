@@ -1,0 +1,38 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "opts": {
+    "template": "node_modules/better-docs",
+    "readme": "readme.md"
+  },
+
+  "plugins": [
+    "node_modules/better-docs/category",
+    "node_modules/better-docs/component"
+  ],
+
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "search": true,
+    "better-docs": {
+      "name": "Heppiventcard",
+      //   "logo": "./src/image/logo.gif",
+      "title": "Heppiventcard",
+      "dateFormat": "Do MMMM YYYY, h:mm a",
+      "footer": "created by Jennifer Schnaible https://github.com/Finneah",
+      "hideGenerator": false,
+      "navLinks": [
+        {
+          "label": "Github",
+          "href": "https://github.com/Finneah/heppiventcard"
+        },
+        {
+          "label": "Example Application",
+          "href": "https://www.figma.com/file/Ze1jZrjApvyP6sv2e2Dpbb/heppiventcard?node-id=0%3A2932"
+        }
+      ]
+    }
+  }
+}

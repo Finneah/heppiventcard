@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heppiventcard screens/HomeScreen.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">Heppiventcard</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/Finneah/heppiventcard"
+                        >
+                            Github
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.figma.com/file/Ze1jZrjApvyP6sv2e2Dpbb/heppiventcard?node-id=0%3A2932"
+                        >
+                            Example Application
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"></div><div class="category"><h2>Component</h2><h3>Namespaces</h3><ul><li><a href="HomeScreenHeader.html">HomeScreenHeader</a></li><li><a href="MemberCard.html">MemberCard</a></li><li><a href="StampCard.html">StampCard</a></li></ul></div><div class="category"><h2>Database</h2><h3>Classes</h3><ul><li><a href="StampCardsModel.html">StampCardsModel</a></li><li><a href="StampCardsSchema.html">StampCardsSchema</a></li><li><a href="StampsModel.html">StampsModel</a></li><li><a href="StampsSchema.html">StampsSchema</a></li><li><a href="UserModel.html">UserModel</a></li><li><a href="UserSchema.html">UserSchema</a></li></ul></div><div class="category"><h2>View</h2><h3>Namespaces</h3><ul><li><a href="HomeScreen.html">HomeScreen</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>screens/HomeScreen.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState} from 'react';
+import {Accordion, Card, CardItem, Container, Content} from 'native-base';
+import {Dimensions, Linking, StyleSheet} from 'react-native';
+
+import GlobalColors from '../styles/GlobalColors';
+import HomeScreenHeader from '../components/HomeScreenHeader';
+import MemberCard from '../components/MemberCard';
+import StampCard from '../components/StampCard';
+
+import {StampCards, Stamps} from '../database';
+
+import {StampsModel} from '../database/Models/StampsModel';
+
+let stampsModel = new StampsModel();
+
+const numCol = 3;
+const TEST = false;
+
+/**
+ * @category View
+ * @namespace HomeScreen
+ * @description Startpage of the app.
+ */
+const HomeScreen = ({navigation}) => {
+  const [cards, setCards] = useState([]);
+
+  React.useLayoutEffect(() => {
+    StampCards.onLoaded(async () => {
+      if (TEST) {
+        console.info('StampCards loaded', StampCards.data());
+      }
+      if (StampCards.data().length === 0) {
+        await createFirstStampCard();
+      }
+    });
+
+    StampCards.onChange(async () => {
+      if (TEST) {
+        console.info('StampCards changed', StampCards.data());
+      }
+    });
+
+    Stamps.onLoaded(async () => {
+      if (TEST) {
+        console.info('Stamps loaded', Stamps.data());
+      }
+
+      _getStampCards(StampCards.data());
+    });
+
+    Stamps.onChange(async () => {
+      if (TEST) {
+        console.info('Stamps loaded', Stamps.data());
+      }
+
+      _getStampCards(StampCards.data());
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /**
+   * @memberof HomeScreen
+   * @description delete All for Dev
+   * @deprecated NOT IN USE, only for dev
+   */
+  async function deleteAll() {
+    await StampCards.perform(function (db) {
+      StampCards.data().forEach(function (item) {
+        db.remove(item);
+      });
+    });
+    await Stamps.perform(function (db) {
+      Stamps.data().forEach(function (item) {
+        db.remove(item);
+      });
+    });
+
+    await createFirstStampCard();
+  }
+
+  /**
+   * @memberof HomeScreen
+   * @param {Object} sectionStampCards
+   */
+  async function _getStampCards(sectionStampCards) {
+    var sections = [];
+    if (TEST) {
+      console.info('_getStampCards', sectionStampCards, Stamps.data());
+    }
+    sectionStampCards.forEach(async (stampCard) => {
+      var sectionPart = stampCard;
+      sectionPart.title =
+        stampCard.title === '' ? 'Aktuelle Stempelkarte' : stampCard.title;
+      var content = stampsModel.filterStampsBy({
+        stampCard_id: stampCard.id,
+      });
+      if (content.length === 0) {
+        content = stampsModel.filterStampsBy({
+          stampCard: stampCard.id,
+        });
+      }
+
+      sectionPart.content = content;
+      sections.push(sectionPart);
+    });
+
+    setCards(sections);
+  }
+
+  /**
+   * @memberof HomeScreen
+   */
+  async function createFirstStampCard() {
+    var newStampCard = {
+      date_of_creation: new Date(),
+      title: '',
+      complete: false,
+    };
+    var card = await StampCards.insert(newStampCard, true)[0];
+
+    var newStamps = [];
+    for (let i = 1; i &lt;= 10; i++) {
+      newStamps.push({
+        number: i,
+        done: 0,
+        stampCard: card,
+      });
+    }
+
+    await Stamps.insert(newStamps, true);
+  }
+
+  return (
+    &lt;Container style={{padding: 5}}>
+      &lt;HomeScreenHeader
+        onPress={() => {
+          Linking.openURL('http://heppivents.de/').catch((err) =>
+            console.error('An error occured', err),
+          );
+        }}
+      />
+      &lt;Content>
+        {/* &lt;Button onPress={() => deleteAll()}>
+          &lt;Text>{'DELETE'}&lt;/Text>
+        &lt;/Button> */}
+        &lt;MemberCard />
+        &lt;Card>
+          &lt;CardItem first last>
+            &lt;Accordion
+              style={styles.transparentBorder}
+              dataArray={cards}
+              animation={true}
+              expanded={0}
+              headerStyle={[styles.transparentBG]}
+              icon="chevron-forward"
+              expandedIcon="chevron-down"
+              iconStyle={{color: GlobalColors.brandPrimary}}
+              expandedIconStyle={{color: GlobalColors.brandSecondary}}
+              renderContent={(item) => {
+                if (TEST) {
+                  console.log('renderContent', item);
+                }
+
+                return &lt;StampCard item={item} />;
+              }}
+            />
+          &lt;/CardItem>
+        &lt;/Card>
+      &lt;/Content>
+    &lt;/Container>
+  );
+};
+
+const styles = StyleSheet.create({
+  item: {
+    flexDirection: 'column',
+    backgroundColor: 'transparent',
+    margin: 5,
+    padding: 0,
+    borderRadius: 20,
+
+    width: Dimensions.get('screen').width * ((100 / numCol - 10) / 100),
+    height: Dimensions.get('screen').width * ((100 / numCol - 10) / 100),
+  },
+  content: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignContent: 'space-between',
+    justifyContent: 'space-evenly',
+  },
+  lastItem: {
+    backgroundColor: GlobalColors.lightGrey,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: Dimensions.get('screen').width * ((100 / numCol - 10) / 100) * 2.2,
+  },
+  image: {
+    backgroundColor: GlobalColors.lightGrey,
+    borderRadius: 20,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+  },
+  stampItem: {
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  transparentBorder: {borderColor: 'transparent'},
+  transparentBG: {backgroundColor: 'transparent'},
+});
+
+export default HomeScreen;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

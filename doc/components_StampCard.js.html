@@ -1,4 +1,115 @@
-import {
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heppiventcard components/StampCard.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">Heppiventcard</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/Finneah/heppiventcard"
+                        >
+                            Github
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.figma.com/file/Ze1jZrjApvyP6sv2e2Dpbb/heppiventcard?node-id=0%3A2932"
+                        >
+                            Example Application
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"></div><div class="category"><h2>Component</h2><h3>Namespaces</h3><ul><li><a href="HomeScreenHeader.html">HomeScreenHeader</a></li><li><a href="MemberCard.html">MemberCard</a></li><li><a href="StampCard.html">StampCard</a></li></ul></div><div class="category"><h2>Database</h2><h3>Classes</h3><ul><li><a href="StampCardsModel.html">StampCardsModel</a></li><li><a href="StampCardsSchema.html">StampCardsSchema</a></li><li><a href="StampsModel.html">StampsModel</a></li><li><a href="StampsSchema.html">StampsSchema</a></li><li><a href="UserModel.html">UserModel</a></li><li><a href="UserSchema.html">UserSchema</a></li></ul></div><div class="category"><h2>View</h2><h3>Namespaces</h3><ul><li><a href="HomeScreen.html">HomeScreen</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/StampCard.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
   Body,
   Button,
   Card,
@@ -170,27 +281,27 @@ const StampCard = (props) => {
     var stampCardItems = null;
     if (stampCard?.content) {
       stampCardItems = stampCard.content.map((stamp, index) => (
-        <View key={(stamp.number + index).toString()}>
+        &lt;View key={(stamp.number + index).toString()}>
           {stamp.done === 1 || stamp.done === true ? (
-            <Pressable
+            &lt;Pressable
               key={(stamp.number + index).toString()}
               style={[styles.item]}
               onPress={() => {
                 console.log('Pressable', stamp, index);
                 _showDetails(stamp, index);
               }}>
-              <Image
+              &lt;Image
                 key={(stamp.number + index).toString()}
                 source={{uri: 'data:image/png;base64,' + stamp.image}}
                 style={styles.image}
               />
-            </Pressable>
+            &lt;/Pressable>
           ) : (
-            <View
+            &lt;View
               key={(stamp.number + index).toString()}
               style={[styles.item, styles.stampItem]}>
               {doneItems === index ? (
-                <Icon
+                &lt;Icon
                   onPress={() => {
                     setQRCodeModalVisible(true);
                     setSelectedItem(stamp);
@@ -199,54 +310,54 @@ const StampCard = (props) => {
                   name="add"
                 />
               ) : (
-                <Title style={{color: GlobalColors.brandPrimary}}>
+                &lt;Title style={{color: GlobalColors.brandPrimary}}>
                   {stamp.number.toString()}
-                </Title>
+                &lt;/Title>
               )}
-            </View>
+            &lt;/View>
           )}
-        </View>
+        &lt;/View>
       ));
     }
 
     return stampCardItems;
   }
   return (
-    <View style={styles.content}>
-      <StampCardItems stampCard={stampCard} />
+    &lt;View style={styles.content}>
+      &lt;StampCardItems stampCard={stampCard} />
       {stampCard.finished ? (
-        <View style={[styles.item, styles.lastItem]}>
-          <Image source={stampCard.finishedIcon} style={styles.image} />
-        </View>
+        &lt;View style={[styles.item, styles.lastItem]}>
+          &lt;Image source={stampCard.finishedIcon} style={styles.image} />
+        &lt;/View>
       ) : (
-        <View style={[styles.item, styles.lastItem]}>
-          <Text>{strings('FINISH_CARD_TEXT')}</Text>
-        </View>
+        &lt;View style={[styles.item, styles.lastItem]}>
+          &lt;Text>{strings('FINISH_CARD_TEXT')}&lt;/Text>
+        &lt;/View>
       )}
 
-      <Modal
+      &lt;Modal
         transparent
         animationType="slide"
-        presentationStyle="overFullScreen" // <-- Swipe down/dismiss works now!
+        presentationStyle="overFullScreen" // &lt;-- Swipe down/dismiss works now!
         visible={modalVisible}
-        onDismiss={() => setModalVisible(false)} // <-- This gets called all the time
+        onDismiss={() => setModalVisible(false)} // &lt;-- This gets called all the time
         onRequestClose={() => setModalVisible(false)}>
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Card transparent>
-                <CardItem header first>
-                  <Left>
+        &lt;TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          &lt;View style={styles.centeredView}>
+            &lt;View style={styles.modalView}>
+              &lt;Card transparent>
+                &lt;CardItem header first>
+                  &lt;Left>
                     {selectedItem ? (
-                      <Thumbnail
+                      &lt;Thumbnail
                         large
                         source={{
                           uri: 'data:image/png;base64,' + selectedItem.image,
                         }}
                       />
                     ) : null}
-                    <Body>
-                      <Text
+                    &lt;Body>
+                      &lt;Text
                         style={{
                           color: GlobalColors.dark,
                           fontWeight: 'bold',
@@ -254,22 +365,22 @@ const StampCard = (props) => {
                           flexWrap: 'wrap',
                         }}>
                         {selectedItem ? selectedItem.name : ''}
-                      </Text>
-                      <Text note>
+                      &lt;/Text>
+                      &lt;Text note>
                         {selectedItem
                           ? selectedItem?.date?.toLocaleDateString()
                           : ''}
-                      </Text>
-                    </Body>
-                  </Left>
-                </CardItem>
-                <CardItem cardBody>
-                  <Text note>
+                      &lt;/Text>
+                    &lt;/Body>
+                  &lt;/Left>
+                &lt;/CardItem>
+                &lt;CardItem cardBody>
+                  &lt;Text note>
                     {selectedItem ? selectedItem.description : ''}
-                  </Text>
-                </CardItem>
-                <CardItem footer last>
-                  <Button
+                  &lt;/Text>
+                &lt;/CardItem>
+                &lt;CardItem footer last>
+                  &lt;Button
                     style={{marginTop: 10}}
                     centered
                     rounded
@@ -277,34 +388,34 @@ const StampCard = (props) => {
                     onPress={() => {
                       setModalVisible(false);
                     }}>
-                    <Text>{strings('CLOSE')}</Text>
-                  </Button>
-                </CardItem>
-              </Card>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+                    &lt;Text>{strings('CLOSE')}&lt;/Text>
+                  &lt;/Button>
+                &lt;/CardItem>
+              &lt;/Card>
+            &lt;/View>
+          &lt;/View>
+        &lt;/TouchableWithoutFeedback>
+      &lt;/Modal>
 
-      <Modal
+      &lt;Modal
         animationType="slide"
-        presentationStyle="overFullScreen" // <-- Swipe down/dismiss works now!
+        presentationStyle="overFullScreen" // &lt;-- Swipe down/dismiss works now!
         visible={qrCodeModalVisible}
-        onDismiss={() => setQRCodeModalVisible(false)} // <-- This gets called all the time
+        onDismiss={() => setQRCodeModalVisible(false)} // &lt;-- This gets called all the time
         onRequestClose={() => setQRCodeModalVisible(false)}>
-        <View style={{padding: 20, flex: 1, flexDirection: 'column'}}>
-          <Card>
-            <CardItem first last>
-              <Left>
-                <Body>
-                  <Text>{strings('SCAN_QR_CODE_NOW')}</Text>
-                  <Text note>{strings('QR_CODE_DESCRIPTION')}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-          </Card>
+        &lt;View style={{padding: 20, flex: 1, flexDirection: 'column'}}>
+          &lt;Card>
+            &lt;CardItem first last>
+              &lt;Left>
+                &lt;Body>
+                  &lt;Text>{strings('SCAN_QR_CODE_NOW')}&lt;/Text>
+                  &lt;Text note>{strings('QR_CODE_DESCRIPTION')}&lt;/Text>
+                &lt;/Body>
+              &lt;/Left>
+            &lt;/CardItem>
+          &lt;/Card>
 
-          <QRCodeScanner
+          &lt;QRCodeScanner
             showMarker={true}
             // cameraStyle={{
             //   alignSelf: 'center',
@@ -316,18 +427,18 @@ const StampCard = (props) => {
             topContent={null}
             bottomContent={null}
           />
-          <Button
+          &lt;Button
             primary
             centered
             rounded
             onPress={() => {
               setQRCodeModalVisible(false);
             }}>
-            <Text>{strings('CANCEL')}</Text>
-          </Button>
-        </View>
-      </Modal>
-    </View>
+            &lt;Text>{strings('CANCEL')}&lt;/Text>
+          &lt;/Button>
+        &lt;/View>
+      &lt;/Modal>
+    &lt;/View>
   );
 };
 
@@ -407,3 +518,34 @@ const styles = StyleSheet.create({
   },
 });
 export default StampCard;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

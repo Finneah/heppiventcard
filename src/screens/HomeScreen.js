@@ -1,13 +1,5 @@
 import React, {useState} from 'react';
-import {
-  Accordion,
-  Button,
-  Card,
-  CardItem,
-  Container,
-  Content,
-  Text,
-} from 'native-base';
+import {Accordion, Card, CardItem, Container, Content} from 'native-base';
 import {Dimensions, Linking, StyleSheet} from 'react-native';
 
 import GlobalColors from '../styles/GlobalColors';
@@ -23,6 +15,12 @@ let stampsModel = new StampsModel();
 
 const numCol = 3;
 const TEST = false;
+
+/**
+ * @category View
+ * @namespace HomeScreen
+ * @description Startpage of the app.
+ */
 const HomeScreen = ({navigation}) => {
   const [cards, setCards] = useState([]);
 
@@ -61,6 +59,11 @@ const HomeScreen = ({navigation}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /**
+   * @memberof HomeScreen
+   * @description delete All for Dev
+   * @deprecated NOT IN USE, only for dev
+   */
   async function deleteAll() {
     await StampCards.perform(function (db) {
       StampCards.data().forEach(function (item) {
@@ -76,6 +79,10 @@ const HomeScreen = ({navigation}) => {
     await createFirstStampCard();
   }
 
+  /**
+   * @memberof HomeScreen
+   * @param {Object} sectionStampCards
+   */
   async function _getStampCards(sectionStampCards) {
     var sections = [];
     if (TEST) {
@@ -101,6 +108,9 @@ const HomeScreen = ({navigation}) => {
     setCards(sections);
   }
 
+  /**
+   * @memberof HomeScreen
+   */
   async function createFirstStampCard() {
     var newStampCard = {
       date_of_creation: new Date(),

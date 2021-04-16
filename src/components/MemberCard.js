@@ -8,6 +8,11 @@ import {Stamps, User} from '../database';
 import {StampsModel} from '../database/Models/StampsModel';
 
 let stampsModel = new StampsModel();
+/**
+ * @category Component
+ * @namespace MemberCard
+ * @description MemberCard Element
+ */
 const MemberCard = ({}) => {
   const defaultMemberName = strings('NAME_PLACEHOLDER');
   const [user, setUser] = useState({name: '', rank: 0});
@@ -17,7 +22,9 @@ const MemberCard = ({}) => {
     //     db.remove(item);
     //   });
     // });
-
+    /**
+     * @memberof MemberCard
+     */
     User.onLoaded(async () => {
       try {
         if (User.data().length === 0) {
@@ -32,6 +39,9 @@ const MemberCard = ({}) => {
         console.info(error);
       }
     });
+    /**
+     * @memberof MemberCard
+     */
     User.onChange(() => {
       try {
         console.log('onChange _setUser', User.data()[0]);
@@ -40,6 +50,9 @@ const MemberCard = ({}) => {
         console.info(error);
       }
     });
+    /**
+     * @memberof MemberCard
+     */
     Stamps.onChange(() => {
       try {
         console.log('Stamps onChange');
@@ -50,6 +63,9 @@ const MemberCard = ({}) => {
     });
   }, []);
 
+  /**
+   * @memberof MemberCard
+   */
   function _checkStampCount() {
     try {
       var stamps = stampsModel.filterStampsBy({
@@ -79,7 +95,9 @@ const MemberCard = ({}) => {
       console.info(error);
     }
   }
-
+  /**
+   * @memberof MemberCard
+   */
   function _setUser(this_user) {
     try {
       setUser({
@@ -90,7 +108,9 @@ const MemberCard = ({}) => {
       console.info(error);
     }
   }
-
+  /**
+   * @memberof MemberCard
+   */
   function _getRank() {
     /**
      * "RANK_0": "Gast",
@@ -115,7 +135,9 @@ const MemberCard = ({}) => {
       }
     }
   }
-
+  /**
+   * @memberof MemberCard
+   */
   function _renderContent() {
     return (
       <CardItem>

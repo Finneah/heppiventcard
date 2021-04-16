@@ -4,6 +4,11 @@ import {Image, Pressable, StyleSheet} from 'react-native';
 import {strings} from '../i18n';
 import logo from '../image/logo.gif';
 import GlobalColors from '../styles/GlobalColors';
+/**
+ * @category Component
+ * @namespace HomeScreenHeader
+ * @description Header for HomeScreen
+ */
 const HomeScreenHeader = (props) => {
   return (
     <Header transparent>
@@ -21,6 +26,7 @@ const HomeScreenHeader = (props) => {
     </Header>
   );
 };
+
 const styles = StyleSheet.create({
   logoImage: {
     backgroundColor: GlobalColors.lightGrey,

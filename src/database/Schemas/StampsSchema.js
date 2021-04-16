@@ -1,3 +1,8 @@
+/**
+ * @category Database
+ * @class StampsSchema
+ * @classdesc DB Schema for Stamps
+ */
 export class StampsSchema {
   name = 'Stamps';
   props = {

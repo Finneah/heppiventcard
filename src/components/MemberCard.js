@@ -6,6 +6,7 @@ import {strings} from '../i18n';
 
 import {Stamps, User} from '../database';
 import {StampsModel} from '../database/Models/StampsModel';
+import {TourGuideZone} from 'rn-tourguide';
 
 let stampsModel = new StampsModel();
 /**
@@ -32,7 +33,6 @@ const MemberCard = ({}) => {
           User.insert(newUser);
           setUser(newUser);
         } else {
-          console.log('onLoaded _setUser', User.data()[0]);
           _setUser(User.data()[0]);
         }
       } catch (error) {
@@ -44,7 +44,6 @@ const MemberCard = ({}) => {
      */
     User.onChange(() => {
       try {
-        console.log('onChange _setUser', User.data()[0]);
         _setUser(User.data()[0]);
       } catch (error) {
         console.info(error);
@@ -55,10 +54,9 @@ const MemberCard = ({}) => {
      */
     Stamps.onChange(() => {
       try {
-        console.log('Stamps onChange');
         _checkStampCount();
       } catch (error) {
-        console.info(error);
+        console.warn('Member Card Stamps.onChange', error);
       }
     });
   }, []);
@@ -72,27 +70,20 @@ const MemberCard = ({}) => {
         done: 1,
       });
 
-      if (stamps.length === 0) {
+      if (stamps?.length === 0) {
         stamps = stampsModel.filterStampsBy({
           done: true,
         });
       }
 
       var user = User.data()[0];
-      console.log(user);
-      if (user) {
-        console.log(
-          User.data(),
-          User.data()[0],
-          user.rank,
-          stamps.length,
-          'test',
-        );
-        // user.rank = stamps.length;
-        // User.update(user.id, user, true);
+
+      if (user?.rank !== undefined) {
+        user.rank = stamps.length;
+        User.update(user.id, user, true);
       }
     } catch (error) {
-      console.info(error);
+      console.warn('Member Card _checkStampCount', error);
     }
   }
   /**
@@ -117,12 +108,15 @@ const MemberCard = ({}) => {
      * "RANK_3": "Stammgast",
      * "RANK_10": "Mitglied",
      * "RANK_15": "Stammmitglied",
-     * "RANK_20": "Familienmitglied",
+     * "RANK_20": "Platinmitglied",
+     *  "RANK_30": "Goldmitglied",
      */
     var rank = user.rank;
-    console.log('rank', rank);
+
     if (rank) {
-      if (rank >= 20) {
+      if (rank >= 30) {
+        return strings('RANK_30');
+      } else if (rank >= 20) {
         return strings('RANK_20');
       } else if (rank >= 15) {
         return strings('RANK_15');
@@ -154,6 +148,7 @@ const MemberCard = ({}) => {
             <Label style={{color: GlobalColors.brandPrimary}}>
               {strings('NAME')}
             </Label>
+
             <Input
               style={styles.nameInput}
               placeholder={defaultMemberName}
@@ -170,6 +165,7 @@ const MemberCard = ({}) => {
               }}
             />
           </Item>
+
           <Item style={[styles.transparentBorder]} inlineLabel>
             <Label style={{color: GlobalColors.brandPrimary}}>
               {strings('RANK')}

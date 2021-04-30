@@ -1,5 +1,5 @@
 import {Header, Left, Right, Title} from 'native-base';
-import React from 'react';
+import React, {useRef} from 'react';
 import {Image, Pressable, StyleSheet} from 'react-native';
 import {strings} from '../i18n';
 import logo from '../image/logo.gif';

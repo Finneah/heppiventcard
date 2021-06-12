@@ -4,8 +4,10 @@ import {
   Card,
   CardItem,
   Content,
+  Header,
   Icon,
   Left,
+  Right,
   Spinner,
   Text,
   Thumbnail,
@@ -34,6 +36,7 @@ import {StampCards, Stamps, User} from '../database';
 import {StampsModel} from '../database/Models/StampsModel';
 import {StampCardsSchema} from '../database/Schemas/StampCardsSchema';
 import {TourGuideZone} from 'rn-tourguide';
+
 let stampsModel = new StampsModel();
 
 let stampCardsSchema = new StampCardsSchema();
@@ -246,6 +249,7 @@ const StampCard = (props) => {
       Vibration.vibrate([500, 500], false);
 
       var data = _createQRCodeDataObject(e.data);
+
       var image;
 
       if (data.url) {
@@ -253,9 +257,9 @@ const StampCard = (props) => {
       }
 
       if (data.date && data.description && data.name && image) {
-        //var exist = _getStampExists(data);
+        var exist = _getStampExists(data);
 
-        if (true) {
+        if (!exist) {
           selectedItem.image = image;
           selectedItem.description = data.description;
           selectedItem.date = new Date(data.date);
@@ -288,7 +292,6 @@ const StampCard = (props) => {
           text: 'OK',
           onPress: () => {
             console.warn(error);
-
             setQRCodeModalVisible(false);
           },
         },
@@ -357,7 +360,12 @@ const StampCard = (props) => {
 
     if (exist.length !== 0) {
       Alert.alert(strings('DO_NOT_CHEAT'), strings('STAMP_EXIST'), [
-        {text: strings('WORTH_A_TRY'), onPress: () => {}},
+        {
+          text: strings('WORTH_A_TRY'),
+          onPress: () => {
+            setQRCodeModalVisible(false);
+          },
+        },
       ]);
       return true;
     }
@@ -510,21 +518,18 @@ const StampCard = (props) => {
         visible={qrCodeModalVisible}
         onDismiss={() => setQRCodeModalVisible(false)} // <-- This gets called all the time
         onRequestClose={() => setQRCodeModalVisible(false)}>
+        <Header transparent>
+          <Left></Left>
+          <Body>
+            <Title style={{color: GlobalColors.dark}}>
+              {strings('SCAN_QR_CODE_NOW')}
+            </Title>
+          </Body>
+        </Header>
+        {showLoadingSpinner ? (
+          <Spinner color={GlobalColors.brandSecondary}></Spinner>
+        ) : null}
         <View style={{padding: 20, flex: 1, flexDirection: 'column'}}>
-          <Card>
-            <CardItem first last>
-              <Left>
-                <Body>
-                  <Text>{strings('SCAN_QR_CODE_NOW')}</Text>
-                  <Text note>{strings('QR_CODE_DESCRIPTION')}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            {showLoadingSpinner ? (
-              <Spinner color={GlobalColors.brandPrimary}></Spinner>
-            ) : null}
-          </Card>
-
           <QRCodeScanner
             showMarker={true}
             // cameraStyle={{
@@ -542,6 +547,7 @@ const StampCard = (props) => {
             centered
             rounded
             onPress={() => {
+              setShowLoadingSpinner(false);
               setQRCodeModalVisible(false);
             }}>
             <Text>{strings('CANCEL')}</Text>

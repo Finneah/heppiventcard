@@ -121,6 +121,20 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('heppiventcard_key')
+            storePassword 'bloom-ensnare-JEANS-drier'
+            keyPassword 'bloom-ensnare-JEANS-drier'
+            keyAlias 'heppiventcard'
+        }
+        release {
+            storeFile file('/private/var/folders/5v/q3x2z_k13lx35g245gcczbnc0000gp/T/com.agilebits.onepassword7/com.agilebits.Attachments.noindex/auhvr7s4pncejfpmoqwaqp4nbi/heppiventcard_key')
+            keyAlias 'heppiventcard_key'
+            storePassword 'bloom-ensnare-JEANS-drier'
+            keyPassword 'bloom-ensnare-JEANS-drier'
+        }
+    }
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {

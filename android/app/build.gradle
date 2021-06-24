@@ -121,6 +121,20 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('heppiventcard_key')
+            storePassword 'bloom-ensnare-JEANS-drier'
+            keyPassword 'bloom-ensnare-JEANS-drier'
+            keyAlias 'heppiventcard'
+        }
+        release {
+            storeFile file('/private/var/folders/5v/q3x2z_k13lx35g245gcczbnc0000gp/T/com.agilebits.onepassword7/com.agilebits.Attachments.noindex/auhvr7s4pncejfpmoqwaqp4nbi/heppiventcard_key')
+            keyAlias 'heppiventcard_key'
+            storePassword 'bloom-ensnare-JEANS-drier'
+            keyPassword 'bloom-ensnare-JEANS-drier'
+        }
+    }
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
@@ -133,7 +147,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
 
@@ -144,14 +158,6 @@ android {
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
-        }
-    }
-    signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
         }
     }
     buildTypes {

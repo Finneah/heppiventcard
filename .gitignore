@@ -1,7 +1,26 @@
-# OSX
-#
+/package-lock.json
+/node_modules
+/__tests__/__snapshots__/*
+/.vscode
 .DS_Store
 
+/android/.idea/*
+/android/.gradle
+/android/app/build
+/android/app/release
+/android/build
+/android/app/src/main/assets/index.android.bundle
+/android/app/debug
+/android/local.properties
+
+/ios/build
+/ios/main.jsbundle
+/ios/assets/*
+/ios/Pods/*
+/ios/heppiventcard.xcodeproj/xcuserdata/*
+/ios/heppiventcard.xcodeproj/project.xcworkspace/xcuserdata/*
+/ios/heppiventcard.xcworkspace/xcuserdata/jennifer.xcuserdatad/xcdebugger
+/ios/heppiventcard.xcworkspace/xcuserdata/jennifer.xcuserdatad/UserInterfaceState.xcuserstate
 # Xcode
 #
 build/

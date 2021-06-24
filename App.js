@@ -8,34 +8,29 @@ import HomeScreen from './src/screens/HomeScreen';
 
 import {createStackNavigator} from '@react-navigation/stack';
 import {strings} from './src/i18n';
-import WebsiteScreen from './src/screens/WebsiteScreen';
+import {TourGuideProvider} from 'rn-tourguide';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <StyleProvider style={getTheme(platform)}>
-      <Root>
-        <NavigationContainer>
-          <Stack.Navigator headerMode="none">
-            <Stack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{
-                headerTitle: strings('APPTITLE'),
-              }}
-            />
-            <Stack.Screen
-              name="Website"
-              component={WebsiteScreen}
-              options={{
-                headerTitle: strings('APPTITLE'),
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Root>
-    </StyleProvider>
+    <TourGuideProvider {...{borderRadius: 16}}>
+      <StyleProvider style={getTheme(platform)}>
+        <Root>
+          <NavigationContainer>
+            <Stack.Navigator headerMode="none">
+              <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{
+                  headerTitle: strings('APPTITLE'),
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Root>
+      </StyleProvider>
+    </TourGuideProvider>
   );
 };
 

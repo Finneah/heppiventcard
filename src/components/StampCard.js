@@ -4,8 +4,11 @@ import {
   Card,
   CardItem,
   Content,
+  Header,
   Icon,
   Left,
+  Right,
+  Spinner,
   Text,
   Thumbnail,
   Title,
@@ -20,9 +23,10 @@ import {
   View,
   Vibration,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import GlobalColors from '../styles/GlobalColors';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal-patch';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
@@ -30,7 +34,12 @@ import {strings} from '../i18n';
 import RNFetchBlob from 'rn-fetch-blob';
 import {StampCards, Stamps, User} from '../database';
 import {StampsModel} from '../database/Models/StampsModel';
+import {StampCardsSchema} from '../database/Schemas/StampCardsSchema';
+import {TourGuideZone} from 'rn-tourguide';
+
 let stampsModel = new StampsModel();
+
+let stampCardsSchema = new StampCardsSchema();
 const numCol = 3;
 /**
  * @category Component
@@ -39,28 +48,169 @@ const numCol = 3;
  */
 const StampCard = (props) => {
   var stampCard = props?.item;
+  var stampCardImage;
+
+  if (stampCard.completed_image) {
+    switch (stampCard.completed_image) {
+      case 'Standard':
+        stampCardImage = require('./../image/Standard.png');
+        break;
+      case 'Platin':
+        stampCardImage = require('./../image/Platin.png');
+
+        break;
+      case 'Gold':
+        stampCardImage = require('./../image/Gold.png');
+
+        break;
+
+      default:
+        break;
+    }
+  }
+
   const [selectedItem, setSelectedItem] = useState(undefined);
   const [modalVisible, setModalVisible] = useState(false);
   const [qrCodeModalVisible, setQRCodeModalVisible] = useState(false);
   const [doneItems, setDoneItems] = useState(0);
+  const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
 
   React.useEffect(() => {
     _checkDoneItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [stampCard]);
+
+  React.useEffect(() => {
+    /**
+     * @memberof StampCard
+     */
+    User.onChange(() => {
+      _finishCardAndCreateNewCard();
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doneItems]);
+
+  async function _finishCardAndCreateNewCard() {
+    try {
+      if (
+        doneItems === stampCard?.content?.length &&
+        (stampCard?.complete === 0 || stampCard?.complete === false)
+      ) {
+        /**
+         * set completed_image from rank
+         * set date_of_completed
+         * set tilte = date_of_creation - date_of_completed
+         * set complete
+         * create new StampCard
+         */
+
+        stampCard.completed_image = _getImageNameForRank();
+        stampCard.date_of_completed = new Date();
+        stampCard.complete = true;
+        stampCard.title = _getStampCardTitle();
+        setQRCodeModalVisible(false);
+
+        await storeData(stampCard.id);
+        await StampCards.update(stampCard, true);
+        await _createNewStampCard();
+
+        Alert.alert(strings('GRATULATION'), strings('STAMP_CARD_COMPLETED'), [
+          {
+            text: 'OK',
+            onPress: () => {},
+          },
+        ]);
+      }
+    } catch (error) {
+      console.info(error);
+    }
+  }
+
+  function _getImageNameForRank() {
+    var user = User.data()[0];
+    if (user.rank >= 30) {
+      return 'Gold';
+    } else if (user.rank >= 20) {
+      return 'Platin';
+    } else if (user.rank >= 10) {
+      return 'Standard';
+    }
+  }
+
+  function _getStampCardTitle() {
+    var firstDate;
+    var lastDate;
+
+    stampCard.content.forEach((element) => {
+      if (!firstDate) {
+        firstDate = element.date;
+      } else {
+        if (element.date < firstDate) {
+          firstDate = element.date;
+        }
+      }
+      if (!lastDate) {
+        lastDate = element.date;
+      } else {
+        if (element.date > lastDate) {
+          lastDate = element.date;
+        }
+      }
+    });
+
+    return (
+      firstDate.toLocaleDateString() + ' - ' + lastDate.toLocaleDateString()
+    );
+  }
+  /**
+   * @memberof StampCard
+   */
+  async function _createNewStampCard() {
+    var schemaProps = stampCardsSchema.props;
+
+    var newStampCard = {};
+    for (const key in schemaProps) {
+      if (Object.hasOwnProperty.call(schemaProps, key)) {
+        newStampCard[key] = undefined;
+      }
+    }
+
+    newStampCard.date_of_creation = new Date();
+    newStampCard.title = '';
+    newStampCard.complete = false;
+
+    var card = await StampCards.insert(newStampCard, true)[0];
+
+    var newStamps = [];
+    for (let i = 1; i <= 10; i++) {
+      newStamps.push({
+        number: i,
+        done: 0,
+        stampCard: card,
+      });
+    }
+
+    await Stamps.insert(newStamps, true);
+  }
+
   /**
    * @memberof StampCard
    * @description check Items for is done, set doneItemsCount
    */
   function _checkDoneItems() {
-    var done = 0;
-    if (stampCard.content) {
-      stampCard.content.forEach((content) => {
-        if (content.done === 1 || content.done === true) {
-          done++;
-          setDoneItems(done);
-        }
-      });
+    try {
+      var done = 0;
+      if (stampCard?.content) {
+        stampCard?.content?.forEach((content) => {
+          if (content.done === 1 || content.done === true) {
+            done++;
+          }
+        });
+
+        setDoneItems(done);
+      }
+    } catch (error) {
+      console.warn('_checkDoneItems', error);
     }
   }
 
@@ -93,52 +243,107 @@ const StampCard = (props) => {
    * name: 'Auf ein Schluck Wissen...',
    * }
    */
-  function _onSuccessReadQRCode(e) {
+  async function _onSuccessReadQRCode(e) {
     try {
+      setShowLoadingSpinner(true);
       Vibration.vibrate([500, 500], false);
 
-      var data = e.data
-        .replace(/\s\s+/g, '')
-        .replace('url', '"url"')
-        .replace('date', '"date"')
-        .replace('description', '"description"')
-        .replace('name', '"name"');
-      data = JSON.parse(
-        data.slice(0, data.lastIndexOf(',')) +
-          data.slice(data.lastIndexOf(',') + 1, data.length),
-      );
+      var data = _createQRCodeDataObject(e.data);
 
-      RNFetchBlob.fetch('GET', data.url, {})
-        .then((res) => {
-          let status = res.info().status;
+      var image;
 
-          if (status === 200) {
-            var exist = _getStampExists(data);
-            console.log('exist', exist);
-            if (!exist) {
-              selectedItem.image = res.data;
-              selectedItem.description = data.description;
-              selectedItem.date = new Date(data.date);
-              selectedItem.done = true;
-              selectedItem.name = data.name;
-              Stamps.update(selectedItem, true);
-              _checkDoneItems();
-            }
-          } else {
-            // handle other status codes
-          }
-        })
+      if (data.url) {
+        image = await _getImageFromWebsite(data);
+      }
 
-        // Something went wrong:
-        .catch((errorMessage, statusCode) => {
-          // error handling
-          console.info(errorMessage, statusCode);
-        });
+      if (data.date && data.description && data.name && image) {
+        var exist = _getStampExists(data);
 
-      setQRCodeModalVisible(false);
+        if (!exist) {
+          selectedItem.image = image;
+          selectedItem.description = data.description;
+          selectedItem.date = new Date(data.date);
+          selectedItem.done = true;
+          selectedItem.name = data.name;
+
+          setSelectedItem(selectedItem);
+          setShowLoadingSpinner(false);
+          setQRCodeModalVisible(false);
+
+          await Stamps.update(selectedItem, true);
+
+          _checkDoneItems();
+        }
+      } else {
+        setShowLoadingSpinner(false);
+        Alert.alert(strings('SRY'), strings('CANT_READ_QR_CODE'), [
+          {
+            text: 'OK',
+            onPress: () => {
+              setQRCodeModalVisible(false);
+            },
+          },
+        ]);
+      }
     } catch (error) {
-      console.warn(error);
-      setQRCodeModalVisible(false);
+      setShowLoadingSpinner(false);
+      Alert.alert(strings('SRY'), strings('CANT_READ_QR_CODE'), [
+        {
+          text: 'OK',
+          onPress: () => {
+            console.warn(error);
+            setQRCodeModalVisible(false);
+          },
+        },
+      ]);
+    }
+  }
+  async function storeData(value) {
+    try {
+      await AsyncStorage.setItem('@accordionExpandedId', value);
+    } catch (e) {
+      // saving error
+    }
+  }
+
+  function _createQRCodeDataObject(qrCodeData) {
+    var data = {};
+
+    qrCodeData.split('&').forEach((element) => {
+      if (element.indexOf('url=') !== -1) {
+        data.url = element.replace('url=', '').replace('\n', '');
+      } else if (element.indexOf('date=') !== -1) {
+        data.date = element.replace('date=', '').replace('\n', '');
+      } else if (element.indexOf('description=') !== -1) {
+        data.description = element
+          .replace('description=', '')
+          .replace('\n', '');
+      } else if (element.indexOf('name=') !== -1) {
+        data.name = element.replace('name=', '').replace('\n', '');
+      }
+    });
+    return data;
+  }
+
+  async function _getImageFromWebsite(data) {
+    try {
+      var res = await RNFetchBlob.fetch('GET', data.url, {});
+      let status = res.info().status;
+
+      if (status === 200) {
+        return res.data;
+      }
+    } catch (error) {
+      console.info(error);
+      setShowLoadingSpinner(false);
+      Alert.alert(strings('SRY'), strings('CANT_READ_QR_CODE'), [
+        {
+          text: 'OK',
+          onPress: () => {
+            setQRCodeModalVisible(false);
+          },
+        },
+      ]);
     }
   }
 
@@ -155,7 +360,12 @@ const StampCard = (props) => {
 
     if (exist.length !== 0) {
       Alert.alert(strings('DO_NOT_CHEAT'), strings('STAMP_EXIST'), [
-        {text: strings('WORTH_A_TRY'), onPress: () => {}},
+        {
+          text: strings('WORTH_A_TRY'),
+          onPress: () => {
+            setQRCodeModalVisible(false);
+          },
+        },
       ]);
       return true;
     }
@@ -166,8 +376,8 @@ const StampCard = (props) => {
    */
   function StampCardItems(params) {
     var {stampCard} = params;
-
     var stampCardItems = null;
+
     if (stampCard?.content) {
       stampCardItems = stampCard.content.map((stamp, index) => (
         <View key={(stamp.number + index).toString()}>
@@ -176,7 +386,6 @@ const StampCard = (props) => {
               key={(stamp.number + index).toString()}
               style={[styles.item]}
               onPress={() => {
-                console.log('Pressable', stamp, index);
                 _showDetails(stamp, index);
               }}>
               <Image
@@ -214,13 +423,30 @@ const StampCard = (props) => {
   return (
     <View style={styles.content}>
       <StampCardItems stampCard={stampCard} />
-      {stampCard.finished ? (
+      {stampCard.complete && stampCardImage ? (
         <View style={[styles.item, styles.lastItem]}>
-          <Image source={stampCard.finishedIcon} style={styles.image} />
+          <Image
+            resizeMode="stretch"
+            style={[
+              styles.image,
+              {
+                width:
+                  Dimensions.get('screen').width *
+                  ((100 / numCol - 10) / 100) *
+                  2.2,
+                height:
+                  Dimensions.get('screen').width * ((100 / numCol - 10) / 100),
+              },
+            ]}
+            // source={require('./../image/Standard.jpg')}
+            source={stampCardImage}
+          />
         </View>
       ) : (
-        <View style={[styles.item, styles.lastItem]}>
-          <Text>{strings('FINISH_CARD_TEXT')}</Text>
+        <View style={[styles.item, styles.lastItem, {padding: 5}]}>
+          <Text note style={{textAlign: 'center'}}>
+            {strings('FINISH_CARD_TEXT')}
+          </Text>
         </View>
       )}
 
@@ -292,18 +518,18 @@ const StampCard = (props) => {
         visible={qrCodeModalVisible}
         onDismiss={() => setQRCodeModalVisible(false)} // <-- This gets called all the time
         onRequestClose={() => setQRCodeModalVisible(false)}>
+        <Header transparent>
+          <Left></Left>
+          <Body>
+            <Title style={{color: GlobalColors.dark}}>
+              {strings('SCAN_QR_CODE_NOW')}
+            </Title>
+          </Body>
+        </Header>
+        {showLoadingSpinner ? (
+          <Spinner color={GlobalColors.brandSecondary}></Spinner>
+        ) : null}
         <View style={{padding: 20, flex: 1, flexDirection: 'column'}}>
-          <Card>
-            <CardItem first last>
-              <Left>
-                <Body>
-                  <Text>{strings('SCAN_QR_CODE_NOW')}</Text>
-                  <Text note>{strings('QR_CODE_DESCRIPTION')}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-          </Card>
-
           <QRCodeScanner
             showMarker={true}
             // cameraStyle={{
@@ -321,6 +547,7 @@ const StampCard = (props) => {
             centered
             rounded
             onPress={() => {
+              setShowLoadingSpinner(false);
               setQRCodeModalVisible(false);
             }}>
             <Text>{strings('CANCEL')}</Text>
@@ -373,7 +600,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '100%',
     height: '100%',
-    justifyContent: 'center',
   },
   stampItem: {
     borderRadius: 20,

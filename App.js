@@ -4,13 +4,9 @@ import React from 'react';
 import getTheme from './native-base-theme/components';
 import platform from './native-base-theme/variables/platform';
 import {NavigationContainer} from '@react-navigation/native';
-import HomeScreen from './src/screens/HomeScreen';
 
-import {createStackNavigator} from '@react-navigation/stack';
-import {strings} from './src/i18n';
 import {TourGuideProvider} from 'rn-tourguide';
-
-const Stack = createStackNavigator();
+import Navigation from './src/AppNavigator';
 
 const App = () => {
   return (
@@ -18,15 +14,7 @@ const App = () => {
       <StyleProvider style={getTheme(platform)}>
         <Root>
           <NavigationContainer>
-            <Stack.Navigator headerMode="none">
-              <Stack.Screen
-                name="Home"
-                component={HomeScreen}
-                options={{
-                  headerTitle: strings('APPTITLE'),
-                }}
-              />
-            </Stack.Navigator>
+            <Navigation />
           </NavigationContainer>
         </Root>
       </StyleProvider>

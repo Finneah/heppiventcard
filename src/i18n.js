@@ -1,4 +1,6 @@
-import I18n from 'react-native-i18n';
+import * as I18n from 'react-native-i18n'; //what changed, it used to be : import I18n from 'react-native-18n'
+
+const translate = I18n;
 
 import en from './locale/en.json';
 import de from './locale/de.json';
@@ -11,13 +13,6 @@ I18n.translations = {de, en}; // Np support for english at the moment
 // export function _setTranslations(language) {
 //     language == 'de' ? (I18n.translations = {de}) : (I18n.translations = {en});
 // }
-export const currentLocale = I18n.currentLocale();
-// Is it a RTL language?
-// export const isRTL =
-//     currentLocale.indexOf('he') === 0 || currentLocale.indexOf('ar') === 0;
-
-// // Allow RTL alignment in RTL languages
-// ReactNative.I18nManager.allowRTL(isRTL);
 
 export function strings(name, params = {}) {
   try {

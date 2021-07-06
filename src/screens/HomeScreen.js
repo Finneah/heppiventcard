@@ -103,6 +103,7 @@ const HomeScreen = ({navigation}) => {
       console.warn(e);
     }
   }
+
   async function _getTutorialIsDone() {
     try {
       const value = await AsyncStorage.getItem('@tutorialDone');
@@ -115,6 +116,7 @@ const HomeScreen = ({navigation}) => {
       console.warn(e);
     }
   }
+
   async function _getAccordionExpandedId() {
     try {
       const value = await AsyncStorage.getItem('@accordionExpandedId');
@@ -162,6 +164,7 @@ const HomeScreen = ({navigation}) => {
     sectionPart.content = content;
     return sectionPart;
   }
+
   function _setSelectedAccordionItem(sections, expandedId) {
     for (let i = 0; i < sections.length; i++) {
       const element = sections[i];

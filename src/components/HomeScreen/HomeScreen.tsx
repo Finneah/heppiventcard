@@ -152,8 +152,6 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
     var content: StampType[] = [];
 
     if (content.length === 0) {
-      console.log(stampCard);
-
       content = stampsModel.filterStampsBy({
         stampCard: stampCard.id,
       });
@@ -166,10 +164,10 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
 
     var sectionPart: SectionPart = {
       ...stampCard,
-      title: stampCard.title === '' ? 'Aktuelle Stempelkarte' : stampCard.title,
+      title: stampCard.title,
       content: content,
     };
-    console.log('HOMESCREEN', sectionPart);
+
     return sectionPart;
   }
 
@@ -244,7 +242,7 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
                   color: 'primary.600',
                 },
               }}>
-              {card.title}
+              {card.title !== '' ? card.title : 'Aktuelle Stempelkarte'}
               <Accordion.Icon color="primary.600" />
             </Accordion.Summary>
             <Accordion.Details>

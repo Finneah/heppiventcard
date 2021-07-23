@@ -2,7 +2,8 @@ import {StampCards, Stamps} from '../database';
 import {UserRank} from './Enums';
 import {strings} from '../locale/i18n';
 import {SectionPart, StampCardType, UserType} from './Types';
-
+import moment from 'moment';
+import 'moment/locale/de';
 export const isValidUser = (user: UserType): Boolean => {
   try {
     if (user?.name !== '' || user?.rank >= 0) {
@@ -75,7 +76,7 @@ export const _getStampCardTitle = (stampCard: SectionPart): string => {
   let firstDate: Date | undefined;
   let lastDate: Date | undefined;
   let title = '';
-  console.log('_getStampCardTitle', stampCard);
+
   if (stampCard?.content) {
     for (const element of stampCard.content) {
       if (!firstDate && element.date) {
@@ -102,16 +103,14 @@ export const _getStampCardTitle = (stampCard: SectionPart): string => {
           lastDate = element.date;
         }
       }
-      console.log(
-        '_getStampCardTitle',
-        firstDate?.toLocaleDateString() +
+
+      if (firstDate && lastDate) {
+        title =
+          moment(firstDate).locale('de').format('L') +
           ' - ' +
-          lastDate?.toLocaleDateString(),
-      );
-      title =
-        firstDate?.toLocaleDateString() +
-        ' - ' +
-        lastDate?.toLocaleDateString();
+          moment(lastDate).locale('de').format('L');
+        console.log(title);
+      }
     }
   } else {
     return title;
@@ -134,7 +133,7 @@ export const _createNewStampCard = async () => {
   newStampCard.complete = false;
 
   var card = await StampCards.insert(newStampCard, true)[0];
-  console.log('_createNewStampCard', card);
+
   var newStamps = [];
   for (let i = 1; i <= 10; i++) {
     newStamps.push({

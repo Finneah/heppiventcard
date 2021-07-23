@@ -1,14 +1,18 @@
 /* eslint-disable no-shadow */
 import {View} from 'native-base';
 import * as React from 'react';
-import {QRCodeReturnData, SectionPart, StampType} from '../../Helper/Types';
+import {
+  QRCodeReturnData,
+  SectionPart,
+  StampCardType,
+  StampType,
+} from '../../Helper/Types';
 
 import StampDetailModal from '../StampDetailModal/StampDetailModal';
 
 import QRCodeModal from '../QRCodeModal/QRCodeModal';
 import {StampCards, Stamps, User} from '../../database';
 import {
-  _checkDoneItems,
   _createNewStampCard,
   _getImageNameForRank,
   _getStampCardTitle,
@@ -26,39 +30,34 @@ export const StampItem: React.FC<Props> = ({stamp, index, stampCard}) => {
     qrCodeData: QRCodeReturnData,
   ) {
     await Stamps.update(stamp.id, qrCodeData, true);
-    console.log('doOnSuccessReadQRCodeCallback', stamp, index);
+
     if (stamp.number % 10 === 0) {
       _finishCardAndCreateNewCard();
     }
   }
   async function _finishCardAndCreateNewCard() {
     try {
-      if (
-        _checkDoneItems(stampCard) !== 0 &&
-        _checkDoneItems(stampCard) === stampCard?.content?.length &&
-        stampCard?.complete === false
-      ) {
-        stampCard.completed_image = _getImageNameForRank(User.data()[0]);
-        stampCard.date_of_completed = new Date();
-        stampCard.complete = true;
-        stampCard.title = _getStampCardTitle(stampCard);
+      if (stampCard.id) {
+        await storeData('@accordionExpandedId', stampCard.id);
 
-        if (stampCard.id) {
-          await storeData('@accordionExpandedId', stampCard.id);
-          console.log('_finishCardAndCreateNewCard', stampCard);
-          let updatedItem = await StampCards.update(stampCard, stampCard, true);
-          console.log('_finishCardAndCreateNewCard', updatedItem);
-          if (updatedItem) {
-            await _createNewStampCard();
-          }
-        }
-      } else {
-        console.log(
-          'DONT DO IT',
-          _checkDoneItems(stampCard),
-          stampCard?.content?.length,
-          _checkDoneItems(stampCard) === stampCard?.content?.length,
+        let stampCardToUpdate: StampCardType = {
+          id: stampCard.id,
+          title: _getStampCardTitle(stampCard),
+          complete: true,
+          date_of_creation: stampCard.date_of_creation,
+          date_of_completed: new Date(),
+          completed_image: _getImageNameForRank(User.data()[0]),
+        };
+
+        let updatedItem = await StampCards.update(
+          stampCard.id ?? stampCard,
+          stampCardToUpdate,
+          true,
         );
+
+        if (updatedItem) {
+          await _createNewStampCard();
+        }
       }
     } catch (error) {
       console.info(error);

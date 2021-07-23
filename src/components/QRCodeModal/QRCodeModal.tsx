@@ -83,9 +83,6 @@ const QRCodeModal: React.FC<Props> = ({
 
       if (image) {
         var exist = _getStampExists(data);
-        if (__DEV__) {
-          exist = false;
-        }
 
         if (exist) {
           setAndShowToast(

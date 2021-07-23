@@ -11,7 +11,6 @@ import GlobalColors from '../../styles/GlobalColors';
 import {StampItem} from '../StampItem/StampItem';
 
 import SpinnerOverlay from '../Spinner/SpinnerOverlay';
-import {_getStampCardTitle} from '../../Helper/Helper';
 
 const numCol = 3;
 

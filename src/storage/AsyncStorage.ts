@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {DEBUGLEVEL} from '../Helper/Enums';
 
 type Keys = '@accordionExpandedId' | '@userNameDone' | '@tutorialDone';
-let debugLevel: DEBUGLEVEL = DEBUGLEVEL.OFF;
+
 const storeData = async (key: Keys, value: string): Promise<void | false> => {
   try {
     const jsonValue = JSON.stringify(value);
@@ -20,9 +19,6 @@ const getData = async (key: Keys): Promise<string | undefined> => {
     const jsonValue = await new Promise<string | null>((resolve) =>
       resolve(AsyncStorage.getItem(key)),
     );
-    if (debugLevel !== DEBUGLEVEL.OFF) {
-      console.log('getData', key, jsonValue);
-    }
 
     return jsonValue != null ? jsonValue : undefined;
   } catch (error) {

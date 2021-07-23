@@ -7,6 +7,7 @@ import {StampCardsSchema} from '../Schemas/StampCardsSchema';
  * @class StampCardsModel
  * @classdesc DB Model for StampCards
  */
+
 export class StampCardsModel {
   get props() {
     var props = new StampCardsSchema().props;
@@ -18,7 +19,7 @@ export class StampCardsModel {
    * @param {int} id
    * @returns queryResult
    */
-  getStampCardById = (id) => {
+  getStampCardById = (id: number) => {
     let stampCardsQueryObj = new Queryable(StampCards.data());
     return stampCardsQueryObj.get({
       id: id,

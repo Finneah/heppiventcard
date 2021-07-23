@@ -13,5 +13,6 @@ export class StampsSchema {
     date: '?datetime',
     description: '?string',
     stampCard: '#StampCards',
+    picture: '?string',
   };
 }

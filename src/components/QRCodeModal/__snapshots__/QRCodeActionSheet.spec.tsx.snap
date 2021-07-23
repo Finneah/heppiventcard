@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QRCodeActionSheet renders correctly 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    Array [
+      Object {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {},
+        Object {
+          "backgroundColor": "#F8F8F8",
+          "borderRadius": 20,
+          "flexDirection": "column",
+          "height": 175.00000000000003,
+          "margin": 5,
+          "padding": 0,
+          "width": 175.00000000000003,
+          "zIndex": 0,
+        },
+        Object {
+          "alignItems": "center",
+          "borderRadius": 20,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      fontSize="32px"
+      lineHeight="32px"
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": "primary.600",
+            "fontSize": 12,
+          },
+          Array [
+            Object {
+              "color": "#164e63",
+              "fontSize": 32,
+              "height": 32,
+              "lineHeight": 32,
+              "width": 32,
+            },
+          ],
+          Object {
+            "fontFamily": "Ionicons",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+</RNCSafeAreaProvider>
+`;

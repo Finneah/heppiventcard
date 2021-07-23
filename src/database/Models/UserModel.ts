@@ -1,4 +1,4 @@
-import {UserSchema} from '../Schemas/UserSchema';
+import {UserType} from '../../Helper/Types';
 import Queryable from 'vasern/vasern/src/core/vasern-queryable';
 import {User} from '..';
 /**
@@ -7,18 +7,22 @@ import {User} from '..';
  * @classdesc DB Model for User
  */
 export class UserModel {
-  get props() {
-    var props = new UserSchema().props;
-    return props;
-  }
   /**
    * @memberof UserModel
    * @description get Userobject from DB
    * there is only one User
    * @param {Object} user
    */
-  getUser = (user) => {
+  getUser = (user: object): any => {
     let userQueryObj = new Queryable(User.data());
     return userQueryObj.filter({user}).data();
+  };
+
+  createNewUser = (user: UserType): void => {
+    User.insert(user);
+  };
+
+  updateUser = (user: UserType): void => {
+    User.update(user, user, true);
   };
 }

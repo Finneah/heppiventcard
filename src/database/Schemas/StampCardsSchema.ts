@@ -3,6 +3,7 @@
  * @class StampCardsSchema
  * @classdesc DB Schema for StampCards
  */
+
 export class StampCardsSchema {
   name = 'StampCards';
   props = {

@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomeScreenHeader renders correctly 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    Array [
+      Object {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    alignItems="flex-end"
+    bg="white"
+    flexDirection="row"
+    justifyContent="space-between"
+    marginBottom={10}
+    px={1}
+    style={
+      Array [
+        Object {
+          "alignItems": "flex-end",
+          "backgroundColor": "#FFFFFF",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "marginBottom": 40,
+          "paddingLeft": 4,
+          "paddingRight": 4,
+        },
+      ]
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      fontSize="32px"
+      lineHeight="32px"
+      style={
+        Array [
+          Object {
+            "color": "primary.600",
+            "fontSize": 12,
+          },
+          Array [
+            Object {
+              "color": "#164e63",
+              "fontSize": 32,
+              "height": 32,
+              "lineHeight": 32,
+              "width": 32,
+            },
+          ],
+          Object {
+            "fontFamily": "Ionicons",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <View
+      style={
+        Array [
+          Object {},
+        ]
+      }
+    />
+    <Text
+      color="muted.700"
+      fontFamily="body"
+      fontSize="xl"
+      fontStyle="normal"
+      fontWeight="bold"
+      style={
+        Array [
+          Object {
+            "color": "#404040",
+            "fontSize": 20,
+            "fontStyle": "normal",
+            "fontWeight": "700",
+          },
+        ]
+      }
+    >
+      APPTITLE
+    </Text>
+    <View
+      style={
+        Array [
+          Object {},
+        ]
+      }
+    />
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onHoverIn={[Function]}
+      onHoverOut={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {},
+        ]
+      }
+      testID="pressableLogo"
+    >
+      <Image
+        accessibilityLabel="heppiventlogo, click to open the website"
+        alt="heppiventlogo, click to open the website"
+        maxWidth="100%"
+        onError={[Function]}
+        source={
+          Object {
+            "testUri": "../../../src/image/logo.gif",
+          }
+        }
+        style={
+          Array [
+            Object {
+              "maxWidth": "100%",
+            },
+            Object {
+              "height": 50,
+              "justifyContent": "center",
+              "resizeMode": "stretch",
+              "width": 120,
+            },
+          ]
+        }
+      />
+    </View>
+  </View>
+</RNCSafeAreaProvider>
+`;

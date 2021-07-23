@@ -8,7 +8,7 @@ module.exports = function (grunt) {
             './src/components/*',
             './src/database/*',
             './src/screens/*',
-            './App.js',
+            './App.tsx',
           ],
           dest: './doc',
           options: {

@@ -4,6 +4,14 @@ import {strings} from '../locale/i18n';
 import {SectionPart, StampCardType, UserType} from './Types';
 import moment from 'moment';
 import 'moment/locale/de';
+
+type NewStamp = {
+  number: number;
+  done: Boolean;
+
+  stampCard: StampCardType;
+};
+
 export const isValidUser = (user: UserType): Boolean => {
   try {
     if (user?.name !== '' || user?.rank >= 0) {
@@ -121,8 +129,8 @@ export const _getFormatedDate = (date: Date) => {
   return moment(date).locale('de').format('L');
 };
 
-export const _createNewStampCard = async () => {
-  var newStampCard: StampCardType = {
+export const _getNewStampCardData = (): StampCardType => {
+  var newStampCardData: StampCardType = {
     title: '',
     complete: false,
     date_of_creation: new Date(),
@@ -130,20 +138,28 @@ export const _createNewStampCard = async () => {
     completed_image: undefined,
   };
 
-  newStampCard.date_of_creation = new Date();
-  newStampCard.title = '';
-  newStampCard.complete = false;
+  return newStampCardData;
+};
 
-  var card = await StampCards.insert(newStampCard, true)[0];
-
-  var newStamps = [];
+export const _getNewStampsData = (card: StampCardType): NewStamp[] => {
+  let newStamps: NewStamp[] = [];
   for (let i = 1; i <= 10; i++) {
     newStamps.push({
       number: i,
-      done: 0,
+      done: false,
       stampCard: card,
     });
   }
+  return newStamps;
+};
 
-  await Stamps.insert(newStamps, true);
+export const _createNewStampCard = async () => {
+  let newStampCard = _getNewStampCardData();
+
+  var card = await StampCards.insert(newStampCard, false)[0];
+  if (card) {
+    StampCards.save();
+    let newStamps = _getNewStampsData(card);
+    await Stamps.insert(newStamps, true);
+  }
 };

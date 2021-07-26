@@ -3,8 +3,12 @@ import {UserRank} from './Enums';
 import {
   isValidUser,
   _checkDoneItems,
+  _createNewStampCard,
+  _getFormatedDate,
   _getImageNameForRank,
+  _getNewStampCardData,
   _getRank,
+  _getStampCardTitle,
 } from './Helper';
 import {StampCardType} from './Types';
 
@@ -118,5 +122,131 @@ describe('Helper', () => {
 
       expect(doneIsError).toMatch('Error on _checkDoneItems');
     }
+  });
+
+  test('_getStampCardTitle Function works correctly', () => {
+    let titleIsEmptyString = _getStampCardTitle({
+      id: 'string',
+      title: 'string',
+      complete: false,
+      date_of_creation: new Date(),
+      date_of_completed: undefined,
+      completed_image: 'string',
+      content: [
+        {
+          number: 1,
+          name: undefined,
+          image: undefined,
+          done: false,
+          picture: undefined,
+          date: new Date('2021.03.03'),
+          description: 'string',
+          stampCard: {
+            title: 'string',
+            complete: false,
+            date_of_creation: new Date(),
+            date_of_completed: undefined,
+            completed_image: undefined,
+          },
+        },
+      ],
+    });
+    expect(titleIsEmptyString).toMatch('');
+
+    let titleIsEmptyContentIsEmpty = _getStampCardTitle({
+      id: 'string',
+      title: 'string',
+      complete: false,
+      date_of_creation: new Date('01.01.2021'),
+      date_of_completed: new Date('01.03.2021'),
+      completed_image: 'string',
+      content: undefined,
+    });
+
+    expect(titleIsEmptyContentIsEmpty).toMatch('');
+    let titleIsDateString = _getStampCardTitle({
+      id: 'string',
+      title: 'string',
+      complete: false,
+      date_of_creation: new Date('01.01.2021'),
+      date_of_completed: new Date('01.03.2021'),
+      completed_image: 'string',
+      content: [
+        {
+          number: 1,
+          name: undefined,
+          image: undefined,
+          done: false,
+          picture: undefined,
+          date: new Date('2021.03.03'),
+          description: 'string',
+          stampCard: {
+            title: 'string',
+            complete: false,
+            date_of_creation: new Date(),
+            date_of_completed: undefined,
+            completed_image: undefined,
+          },
+        },
+        {
+          number: 1,
+          name: undefined,
+          image: undefined,
+          done: false,
+          picture: undefined,
+          date: new Date('2021.05.05'),
+          description: 'string',
+          stampCard: {
+            title: 'string',
+            complete: false,
+            date_of_creation: new Date(),
+            date_of_completed: undefined,
+            completed_image: undefined,
+          },
+        },
+        {
+          number: 1,
+          name: undefined,
+          image: undefined,
+          done: false,
+          picture: undefined,
+          date: new Date('2021.01.01'),
+          description: 'string',
+          stampCard: {
+            title: 'string',
+            complete: false,
+            date_of_creation: new Date(),
+            date_of_completed: undefined,
+            completed_image: undefined,
+          },
+        },
+      ],
+    });
+
+    expect(titleIsDateString).toMatch('01.01.2021 - 05.05.2021');
+  });
+
+  test('_getFormatedDate Function works correctly', () => {
+    let formatedDate = _getFormatedDate(new Date('2021.01.01'));
+    expect(formatedDate).toMatch('01.01.2021');
+  });
+
+  test('_getNewStampsData Function works correctly', () => {
+    var newStampCardData: StampCardType = {
+      title: '',
+      complete: false,
+      date_of_creation: new Date(),
+      date_of_completed: undefined,
+      completed_image: undefined,
+    };
+
+    var receivedData = _getNewStampCardData();
+
+    expect(receivedData.title).toBe(newStampCardData.title);
+    expect(receivedData.complete).toBe(newStampCardData.complete);
+  });
+
+  test('_createNewStampCard Function works correctly', () => {
+    expect(_createNewStampCard()).toBeCalledTimes(1);
   });
 });

@@ -19,7 +19,7 @@ export class UserModel {
   };
 
   createNewUser = (user: UserType): void => {
-    User.insert(user);
+    User.insert(user, true);
   };
 
   updateUser = (user: UserType): void => {

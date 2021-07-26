@@ -18,6 +18,10 @@ export const de = {
   RANK_15: 'Stammmitglied',
   RANK_20: 'Platinmitglied',
   RANK_30: 'Goldmitglied',
+  OK: 'Ok',
+  MISSING_CAMERA_PERMISSION_TITLE: 'Fehlende Berechtigung der Kamerafunktion',
+  MISSING_CAMERA_PERMISSION_DESCRIPTION:
+    'Du kannst die Berechtigung in den Einstellungen ändern',
   SCAN_QR_CODE_NOW: 'QR Code scannen',
   SRY: 'Sorry',
   STAMP_CARD_COMPLETED:
@@ -30,4 +34,9 @@ export const de = {
   TOURGUIDE_STAMPCARD_TEXT:
     'Hier siehst du deine Stempelkarte.\nDrücke auf "+" um einen QR-Code einzuscannen.\n Ist ein Stempel eingelesen kannst du auf diesen Stempel klicken um die Details zu lesen.\nViel Spaß beim Sammeln 💪',
   WORTH_A_TRY: 'Ein Versuch war´s Wert',
+  CHANGE_NAME_TITLE: 'Anzeigename ändern',
+
+  GO_TO_SETTINGS: 'Einstellungen',
+  SAVE: 'Speichern',
+  YOUR_RANK: 'Du bist',
 };

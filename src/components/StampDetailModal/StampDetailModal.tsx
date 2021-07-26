@@ -12,6 +12,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 
 import {StampType} from '../../Helper/Types';
 import GlobalColors from '../../styles/GlobalColors';
+import {_getFormatedDate} from '../../Helper/Helper';
 const numCol = 3;
 type Props = {
   stamp: StampType;
@@ -21,12 +22,6 @@ const StampDetailModal: React.FC<Props> = ({stamp, index}) => {
   const [modalIsVisible, setModalVisible] = React.useState(false);
 
   function _showDetails(s: StampType): void {
-    // if (selectedItem === index) {
-    //   setSelectedItem(undefined);
-    // } else {
-    //   setSelectedItem(stamp);
-    // }
-
     if (s.done) {
       setModalVisible(true);
     }
@@ -63,24 +58,25 @@ const StampDetailModal: React.FC<Props> = ({stamp, index}) => {
             </Stack>
           </Modal.Header>
           <Modal.Body>
-            <Image
-              source={{
-                uri: 'https://www.computerbase.de/forum/attachments/koala-jpg.149958/',
-              }}
-              alt="image base"
-              resizeMode="contain"
-              height={300}
-              roundedTop="md"
-              width={'100%'}
-            />
+            {stamp && stamp.picture && stamp.picture?.length > 0 ? (
+              <Image
+                source={{
+                  uri: 'data:image/png;base64,' + stamp?.picture,
+                }}
+                alt="image base"
+                resizeMode="contain"
+                height={300}
+                roundedTop="md"
+                width={'100%'}
+              />
+            ) : null}
             <Text color="gray.400">
-              {stamp ? stamp?.date?.toLocaleDateString() : ''}
+              {stamp && stamp.date ? _getFormatedDate(stamp.date) : ''}
             </Text>
-            <Text lineHeight={[5, 5, 7]} noOfLines={4} color="gray.700">
+            <Text lineHeight={[5, 5, 7]} color="gray.700">
               {stamp ? stamp.description : ''}
             </Text>
           </Modal.Body>
-          {/* <Modal.Footer safeArea></Modal.Footer> */}
         </Modal.Content>
       </Modal>
     </>

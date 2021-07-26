@@ -38,9 +38,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Für den CR Code benötige ich die Erlaubnis deien Kamera zu verwenden</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

@@ -19,12 +19,12 @@ import {
   Stack,
   View,
   useColorModeValue,
+  Box,
 } from 'native-base';
 import StampCard from '../StampCard/StampCard';
 import {getData, storeData} from '../../storage/AsyncStorage';
 import {SectionPart, StampCardType, StampType} from '../../Helper/Types';
 import {DEBUGLEVEL} from '../../Helper/Enums';
-import {Dimensions} from 'react-native';
 
 let stampsModel = new StampsModel();
 
@@ -43,7 +43,12 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
 
   const [cards, setCards] = React.useState(baseCard);
   const [defaultIndex, setDefaultIndex] = React.useState(0);
-
+  // const {colorMode, toggleColorMode} = useColorMode();
+  const mainBgColor = useColorModeValue('white', 'primary.800');
+  const accordionTextColorMode = useColorModeValue(
+    'primary.600',
+    'secondary.400',
+  );
   const {
     canStart, // a boolean indicate if you can start tour guide
     start, // a function to start the tourguide
@@ -226,24 +231,27 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
   function RenderAccordionItems() {
     return (
       <Accordion
+        key={Math.random()}
+        bg={mainBgColor}
+        safeAreaX
         index={[0]}
         defaultIndex={[defaultIndex]}
         borderColor="transparent">
         {cards.map((card) => (
           <Accordion.Item key={card.id}>
             <Accordion.Summary
-              bg="white"
+              bg={mainBgColor}
               _text={{
-                color: 'primary.600',
+                color: accordionTextColorMode,
               }}
               _expanded={{
-                backgroundColor: 'white',
+                backgroundColor: mainBgColor,
                 _text: {
-                  color: 'primary.600',
+                  color: accordionTextColorMode,
                 },
               }}>
               {card.title !== '' ? card.title : 'Aktuelle Stempelkarte'}
-              <Accordion.Icon color="primary.600" />
+              <Accordion.Icon color={accordionTextColorMode} />
             </Accordion.Summary>
             <Accordion.Details>
               <StampCard item={card} />
@@ -255,11 +263,7 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
   }
 
   return (
-    <View
-      bg={useColorModeValue('white', 'primary.800')}
-      justifyContent="center"
-      alignContent="center"
-      minHeight={Dimensions.get('screen').height}>
+    <View bg={mainBgColor} justifyContent="center" alignContent="center">
       <TourGuideZone
         zone={1}
         shape="circle"
@@ -267,8 +271,11 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
         borderRadius={25}>
         <HomeScreenHeader />
       </TourGuideZone>
+
       {/* <Button
-        bg={useColorModeValue('primary.600', 'secondary.400')}
+        alignSelf="flex-start"
+        size="md"
+        variant="ghost"
         onPress={() => {
           toggleColorMode();
         }}>
@@ -278,7 +285,7 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
         // eslint-disable-next-line react-native/no-inline-styles
         _contentContainerStyle={{
           justifyContent: 'center',
-          bg: useColorModeValue('white', 'primary.800'),
+          bg: mainBgColor,
         }} // style={{ backgroundColor: 'blue' }}
       >
         <Stack direction={'column'} space={5}>
@@ -298,6 +305,7 @@ const HomeScreen: React.FC = (/**{navigation}*/) => {
             <RenderAccordionItems />
           </TourGuideZone>
         </Stack>
+        <Box safeArea h={10} />
       </ScrollView>
     </View>
   );

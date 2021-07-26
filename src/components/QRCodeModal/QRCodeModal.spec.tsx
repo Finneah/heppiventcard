@@ -1,14 +1,13 @@
-/**
- * @format
- */
-
 import 'react-native';
 import * as React from 'react';
-
 import {render} from '@testing-library/react-native';
-import QRCodeModal from './QRCodeModal';
-import {SectionPart, StampType} from '../../Helper/Types';
+
+// Note: test renderer must be required after react-native.
+
 import {NativeBaseProvider} from 'native-base';
+
+import QRCodeModal from './QRCodeModal';
+import {SectionPart, StampCardType, StampType} from '../../Helper/Types';
 
 const wrapper = ({children}: any) => (
   <NativeBaseProvider
@@ -19,17 +18,17 @@ const wrapper = ({children}: any) => (
     {children}
   </NativeBaseProvider>
 );
-describe('QRCodeModal', () => {
+
+describe('HomeScreen', () => {
   test('renders correctly', () => {
-    let stampCard: SectionPart = {
-      id: 'string',
+    let stampCard: StampCardType = {
       title: 'string',
       complete: false,
       date_of_creation: new Date(),
       date_of_completed: undefined,
       completed_image: undefined,
-      content: [],
     };
+
     let stamp: StampType = {
       number: 1,
       name: undefined,
@@ -40,15 +39,27 @@ describe('QRCodeModal', () => {
       description: 'string',
       stampCard: stampCard,
     };
-    const qrCodeModalTest = render(
+
+    let content: StampType[] = [stamp];
+    let item: SectionPart = {
+      id: 'string',
+      title: 'string',
+      complete: false,
+      date_of_creation: new Date(),
+      date_of_completed: undefined,
+      completed_image: 'string',
+      content: content,
+    };
+    const qrCodeModal = render(
       <QRCodeModal
-        stamp={stamp}
+        stampCard={item}
         index={0}
-        stampCard={stampCard}
+        stamp={stamp}
         _onSuccessReadQRCodeCallback={(result: any) => console.log(result)}
       />,
       {wrapper},
     );
-    expect(qrCodeModalTest.toJSON()).toMatchSnapshot();
+
+    expect(qrCodeModal.toJSON()).toMatchSnapshot();
   });
 });

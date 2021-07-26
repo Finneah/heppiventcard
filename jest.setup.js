@@ -9,33 +9,31 @@ jest.mock('rn-fetch-blob', () => {
     polyfill: () => {},
   };
 });
-jest.mock('react-navigation', () => {
-  return {
-    createAppContainer: jest
-      .fn()
-      .mockReturnValue(function NavigationContainer(props) {
-        return null;
-      }),
-    createDrawerNavigator: jest.fn(),
-    createMaterialTopTabNavigator: jest.fn(),
-    createStackNavigator: jest.fn(),
-    StackActions: {
-      push: jest
-        .fn()
-        .mockImplementation((x) => ({...x, type: 'Navigation/PUSH'})),
-      replace: jest
-        .fn()
-        .mockImplementation((x) => ({...x, type: 'Navigation/REPLACE'})),
-    },
-    NavigationActions: {
-      navigate: jest.fn().mockImplementation((x) => x),
-    },
-  };
-});
 
 jest.mock('react-native-i18n', () => ({
   t: jest.fn((translation) => translation),
 }));
+
+jest.mock('react-native-permissions', () =>
+  require('react-native-permissions/mock'),
+);
+// jest.mock('react-native-qrcode-scanner', () => jest.fn());
+
+jest.mock('react-native-qrcode-scanner', () => {
+  const React = require('react');
+  const PropTypes = require('prop-types');
+  return class MockQRCodeScanner extends React.Component {
+    static propTypes = {children: PropTypes.any};
+
+    render() {
+      return React.createElement(
+        'react-native-qrcode-scanner',
+        this.props,
+        this.props.children,
+      );
+    }
+  };
+});
 
 // jest.mock('vasern', () => {
 //   let Vasern = require('./src/database');

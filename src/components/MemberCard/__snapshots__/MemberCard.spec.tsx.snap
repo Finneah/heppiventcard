@@ -42,30 +42,45 @@ exports[`MemberCard renders correctly 1`] = `
       }
     >
       <Text
-        color="muted.700"
-        fontFamily="body"
-        fontSize="md"
-        fontStyle="normal"
-        fontWeight="bold"
+        allowFontScaling={false}
+        fontSize="24px"
+        lineHeight="24px"
+        onPress={[Function]}
         style={
           Array [
             Object {
-              "color": "#404040",
-              "fontSize": 16,
-              "fontStyle": "normal",
-              "fontWeight": "700",
+              "color": "primary.600",
+              "fontSize": 12,
             },
+            Array [
+              Object {
+                "color": "#0891b2",
+                "fontSize": 24,
+                "height": 24,
+                "lineHeight": 24,
+                "width": 24,
+              },
+            ],
+            Object {
+              "fontFamily": "Ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {},
           ]
         }
       >
-        HELLO 
+        
       </Text>
       <View
         style={
           Array [
-            Object {},
+            Object {
+              "width": 8,
+            },
           ]
         }
+        width={2}
       />
       <Text
         color="muted.700"
@@ -84,7 +99,7 @@ exports[`MemberCard renders correctly 1`] = `
           ]
         }
       >
-        NAME_PLACEHOLDER
+        HELLO NAME_PLACEHOLDER
       </Text>
     </View>
     <View
@@ -103,7 +118,7 @@ exports[`MemberCard renders correctly 1`] = `
       style={
         Array [
           Object {
-            "color": "#831843",
+            "color": "#f472b6",
             "fontSize": 16,
             "fontStyle": "normal",
             "fontWeight": "700",
@@ -111,7 +126,7 @@ exports[`MemberCard renders correctly 1`] = `
         ]
       }
     >
-      RANK_00
+      YOUR_RANK RANK_00
     </Text>
   </View>
 </RNCSafeAreaProvider>

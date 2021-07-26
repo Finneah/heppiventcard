@@ -8,12 +8,9 @@ import {
   Image,
   StatusBar,
   Heading,
-  Icon,
   useColorModeValue,
   useColorMode,
 } from 'native-base';
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 /**
  * @category Component
@@ -46,14 +43,10 @@ const HomeScreenHeader: React.FC = () => {
       <HStack
         safeAreaTop
         bg={useColorModeValue('white', 'primary.800')}
-        px={1}
+        px={2}
         marginBottom={10}
         justifyContent="space-between"
         alignItems="flex-end">
-        <Icon
-          as={<Ionicons name="menu" />}
-          color={useColorModeValue('primary.600', 'secondary.400')}
-        />
         <Heading size="md">{strings('APPTITLE')}</Heading>
         <Pressable
           testID="pressableLogo"

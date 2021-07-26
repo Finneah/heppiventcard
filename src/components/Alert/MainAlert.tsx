@@ -9,7 +9,7 @@ type Props = {
   showAlert: boolean;
 };
 
-export const MainAlert: React.FC<Props> = ({
+const MainAlert: React.FC<Props> = ({
   status,
   title,
   description,
@@ -27,3 +27,4 @@ export const MainAlert: React.FC<Props> = ({
     </Box>
   ) : null;
 };
+export default MainAlert;

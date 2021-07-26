@@ -23,20 +23,7 @@ describe('MemberCard', () => {
 
   test('userNameHeading is NAME_PLACEHOLDER ', () => {
     const {getByText} = render(<MemberCard />, {wrapper});
-    const userNameHeading = getByText('NAME_PLACEHOLDER');
+    const userNameHeading = getByText('HELLO NAME_PLACEHOLDER');
     expect(userNameHeading).toBeTruthy();
   });
-  test("helloHeading is HELLO + ' '", () => {
-    const {getByText} = render(<MemberCard />, {wrapper});
-    const helloHeading = getByText('HELLO' + ' ');
-    expect(helloHeading).toBeTruthy();
-  });
-
-  // test('validate User', () => {
-  //   var validUser = isValidUser({name: 'XY', rank: 0});
-  //   expect(validUser).toBeTruthy();
-
-  //   // const mockCallback = jest.fn((x) => 42 + x);
-  //   // util.forEach([0, 1], mockCallback);
-  // });
 });

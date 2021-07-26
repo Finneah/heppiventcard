@@ -30,4 +30,7 @@ export const en = {
   TOURGUIDE_STAMPCARD_TEXT:
     'Hier siehst du deine Stempelkarte.\nDrücke auf "+" um einen QR-Code einzuscannen.\n Ist ein Stempel eingelesen kannst du auf diesen Stempel klicken um die Details zu lesen.\nViel Spaß beim Sammeln 💪',
   WORTH_A_TRY: 'Ein Versuch war´s Wert',
+  CHANGE_NAME_TITLE: 'Anzeigename ändern',
+  SAVE: 'Speichern',
+  YOUR_RANK: 'Du bist',
 };

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`QRCodeActionSheet renders correctly 1`] = `
+exports[`StampCard renders correctly 1`] = `
 <RNCSafeAreaProvider
   onInsetsChange={[Function]}
   style={
@@ -22,8 +22,28 @@ exports[`QRCodeActionSheet renders correctly 1`] = `
       }
     }
   >
-    <View>
+    <View
+      style={
+        Array [
+          Object {},
+        ]
+      }
+    >
       <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onHoverIn={[Function]}
+        onHoverOut={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         style={
           Array [
             Object {},
@@ -49,7 +69,6 @@ exports[`QRCodeActionSheet renders correctly 1`] = `
           allowFontScaling={false}
           fontSize="32px"
           lineHeight="32px"
-          onPress={[Function]}
           style={
             Array [
               Object {
@@ -58,7 +77,7 @@ exports[`QRCodeActionSheet renders correctly 1`] = `
               },
               Array [
                 Object {
-                  "color": "#164e63",
+                  "color": "#0891b2",
                   "fontSize": 32,
                   "height": 32,
                   "lineHeight": 32,
@@ -77,11 +96,31 @@ exports[`QRCodeActionSheet renders correctly 1`] = `
           
         </Text>
       </View>
+      <View
+        alignItems="center"
+        display="flex"
+        justifyContent="center"
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      />
     </View>
     <View
+      p={5}
       style={
         Array [
-          Object {},
+          Object {
+            "paddingBottom": 20,
+            "paddingLeft": 20,
+            "paddingRight": 20,
+            "paddingTop": 20,
+          },
           Object {
             "backgroundColor": "#F8F8F8",
             "borderRadius": 20,
@@ -98,31 +137,27 @@ exports[`QRCodeActionSheet renders correctly 1`] = `
             "justifyContent": "center",
             "width": 385.0000000000001,
           },
-          Object {
-            "padding": 5,
-          },
         ]
       }
     >
       <Text
-        color="muted.700"
+        color="secondary.400"
         fontFamily="body"
         fontSize="md"
-        fontStyle="normal"
+        fontStyle="italic"
         fontWeight={400}
         style={
           Array [
             Object {
-              "color": "#404040",
+              "color": "#f472b6",
               "fontSize": 16,
-              "fontStyle": "normal",
+              "fontStyle": "italic",
               "fontWeight": "400",
-            },
-            Object {
               "textAlign": "center",
             },
           ]
         }
+        textAlign="center"
       >
         FINISH_CARD_TEXT
       </Text>

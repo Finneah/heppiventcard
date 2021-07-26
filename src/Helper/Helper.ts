@@ -67,8 +67,7 @@ export const _checkDoneItems = (stampCard: SectionPart): number | string => {
       throw new Error('Error on _checkDoneItems');
     }
   } catch (error) {
-    console.warn('_checkDoneItems', error);
-    return '_checkDoneItems' + ' ' + error.message;
+    return error.message;
   }
 };
 
@@ -109,7 +108,6 @@ export const _getStampCardTitle = (stampCard: SectionPart): string => {
           moment(firstDate).locale('de').format('L') +
           ' - ' +
           moment(lastDate).locale('de').format('L');
-        console.log(title);
       }
     }
   } else {
@@ -117,6 +115,10 @@ export const _getStampCardTitle = (stampCard: SectionPart): string => {
   }
 
   return title;
+};
+
+export const _getFormatedDate = (date: Date) => {
+  return moment(date).locale('de').format('L');
 };
 
 export const _createNewStampCard = async () => {

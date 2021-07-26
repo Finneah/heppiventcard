@@ -49,7 +49,11 @@ const App: React.FC = () => {
     <TourGuideProvider {...{borderRadius: 16}}>
       <NativeBaseProvider theme={theme}>
         <NavigationContainer>
-          <Stack.Navigator headerMode="none">
+          <Stack.Navigator
+            headerMode="none"
+            screenOptions={{
+              cardStyle: {backgroundColor: 'white'},
+            }}>
             <Stack.Screen
               name="Home"
               component={HomeScreen}

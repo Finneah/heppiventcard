@@ -1,5 +1,3 @@
-const {defaults: tsjPreset} = require('ts-jest/presets');
-
 module.exports = {
   preset: 'react-native',
   testRegex: '(/__tests__/.*|/src/.*\\.(test|spec))\\.(jsx?|tsx?)$',

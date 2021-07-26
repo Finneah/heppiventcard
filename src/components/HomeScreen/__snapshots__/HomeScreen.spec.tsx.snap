@@ -1,0 +1,325 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomeScreen renders correctly 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    Array [
+      Object {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    _text={
+      Object {
+        "color": "darkText",
+      }
+    }
+    alignContent="center"
+    bg="white"
+    justifyContent="center"
+    style={
+      Array [
+        Object {
+          "alignContent": "center",
+          "backgroundColor": "#FFFFFF",
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <View
+      onLayout={[Function]}
+    >
+      <View
+        alignItems="flex-end"
+        bg="white"
+        flexDirection="row"
+        justifyContent="space-between"
+        marginBottom={10}
+        px={2}
+        style={
+          Array [
+            Object {
+              "alignItems": "flex-end",
+              "backgroundColor": "#FFFFFF",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "marginBottom": 40,
+              "paddingLeft": 8,
+              "paddingRight": 8,
+            },
+          ]
+        }
+      >
+        <Text
+          color="muted.700"
+          fontFamily="body"
+          fontSize="xl"
+          fontStyle="normal"
+          fontWeight="bold"
+          style={
+            Array [
+              Object {
+                "color": "#404040",
+                "fontSize": 20,
+                "fontStyle": "normal",
+                "fontWeight": "700",
+              },
+            ]
+          }
+        >
+          APPTITLE
+        </Text>
+        <View
+          style={
+            Array [
+              Object {},
+            ]
+          }
+        />
+        <View
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onHoverIn={[Function]}
+          onHoverOut={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Array [
+              Object {},
+            ]
+          }
+          testID="pressableLogo"
+        >
+          <Image
+            accessibilityLabel="heppiventlogo, click to open the website"
+            alt="heppiventlogo, click to open the website"
+            maxWidth="100%"
+            onError={[Function]}
+            source={
+              Object {
+                "testUri": "../../../src/image/logo.jpg",
+              }
+            }
+            style={
+              Array [
+                Object {
+                  "maxWidth": "100%",
+                },
+                Object {
+                  "height": 50,
+                  "justifyContent": "center",
+                  "resizeMode": "stretch",
+                  "width": 120,
+                },
+              ]
+            }
+          />
+        </View>
+      </View>
+    </View>
+    <RCTScrollView
+      contentContainerStyle={
+        Object {
+          "backgroundColor": "#FFFFFF",
+          "justifyContent": "center",
+        }
+      }
+      style={
+        Array [
+          Object {},
+        ]
+      }
+    >
+      <View>
+        <View
+          flexDirection="column"
+          style={
+            Array [
+              Object {
+                "flexDirection": "column",
+              },
+            ]
+          }
+        >
+          <View
+            onLayout={[Function]}
+          >
+            <View
+              alignItems="center"
+              flexDirection="row"
+              justifyContent="space-between"
+              px={5}
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingLeft": 20,
+                    "paddingRight": 20,
+                  },
+                ]
+              }
+            >
+              <View
+                alignItems="center"
+                flexDirection="row"
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  fontSize="24px"
+                  lineHeight="24px"
+                  onPress={[Function]}
+                  style={
+                    Array [
+                      Object {
+                        "color": "primary.600",
+                        "fontSize": 12,
+                      },
+                      Array [
+                        Object {
+                          "color": "#0891b2",
+                          "fontSize": 24,
+                          "height": 24,
+                          "lineHeight": 24,
+                          "width": 24,
+                        },
+                      ],
+                      Object {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      Object {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "width": 8,
+                      },
+                    ]
+                  }
+                  width={2}
+                />
+                <Text
+                  color="muted.700"
+                  fontFamily="body"
+                  fontSize="md"
+                  fontStyle="normal"
+                  fontWeight="bold"
+                  style={
+                    Array [
+                      Object {
+                        "color": "#404040",
+                        "fontSize": 16,
+                        "fontStyle": "normal",
+                        "fontWeight": "700",
+                      },
+                    ]
+                  }
+                >
+                  HELLO NAME_PLACEHOLDER
+                </Text>
+              </View>
+              <View
+                style={
+                  Array [
+                    Object {},
+                  ]
+                }
+              />
+              <Text
+                color="secondary.400"
+                fontFamily="body"
+                fontSize="md"
+                fontStyle="normal"
+                fontWeight="bold"
+                style={
+                  Array [
+                    Object {
+                      "color": "#f472b6",
+                      "fontSize": 16,
+                      "fontStyle": "normal",
+                      "fontWeight": "700",
+                    },
+                  ]
+                }
+              >
+                YOUR_RANK RANK_00
+              </Text>
+            </View>
+          </View>
+          <View
+            height={5}
+            style={
+              Array [
+                Object {
+                  "height": 20,
+                },
+              ]
+            }
+          />
+          <View
+            onLayout={[Function]}
+          >
+            <View
+              bg="white"
+              borderColor="transparent"
+              borderRadius="lg"
+              borderWidth={1}
+              overflow="hidden"
+              style={
+                Array [
+                  Object {
+                    "backgroundColor": "#FFFFFF",
+                    "borderColor": "transparent",
+                    "borderRadius": 6,
+                    "borderWidth": 1,
+                    "overflow": "hidden",
+                  },
+                ]
+              }
+            />
+          </View>
+        </View>
+        <View
+          h={10}
+          style={
+            Array [
+              Object {
+                "height": 40,
+              },
+            ]
+          }
+        />
+      </View>
+    </RCTScrollView>
+  </View>
+</RNCSafeAreaProvider>
+`;

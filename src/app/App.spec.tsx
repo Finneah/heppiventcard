@@ -9,6 +9,10 @@ import App from './App';
 // Note: test renderer must be required after react-native.
 import {render} from '@testing-library/react-native';
 
-it('renders correctly', () => {
-  render(<App />);
+describe('APP', () => {
+  test('renders correctly', () => {
+    const app = render(<App />);
+
+    expect(app.toJSON()).toMatchSnapshot();
+  });
 });

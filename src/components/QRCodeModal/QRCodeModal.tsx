@@ -14,6 +14,13 @@ import {
   _getStampExists,
 } from './QRCodeModalHelper';
 import {_checkDoneItems} from '../../Helper/Helper';
+import {
+  check,
+  openSettings,
+  PERMISSIONS,
+  RESULTS,
+} from 'react-native-permissions';
+import MainAlertDialog from '../AlertDialog/MainAlertDialog';
 
 type Props = {
   stampCard: SectionPart;
@@ -32,7 +39,7 @@ const QRCodeModal: React.FC<Props> = ({
 }) => {
   const [qrCodeModalVisible, setQRCodeModalVisible] = React.useState(false);
   const [showLoadingSpinner, setShowLoadingSpinner] = React.useState(false);
-
+  const [showAlertDialog, setShowAlertDialog] = React.useState(false);
   const toast = useToast();
 
   React.useEffect(() => {
@@ -40,7 +47,6 @@ const QRCodeModal: React.FC<Props> = ({
       setQRCodeModalVisible(false);
       setShowLoadingSpinner(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qrCodeModalVisible]);
 
   function setAndShowToast(
@@ -115,13 +121,32 @@ const QRCodeModal: React.FC<Props> = ({
     }
   }
 
+  function checkCameraPermsision() {
+    check(PERMISSIONS.IOS.CAMERA)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.DENIED:
+          case RESULTS.BLOCKED:
+            setShowAlertDialog(true);
+            break;
+
+          case RESULTS.GRANTED:
+            _checkDoneItems(stampCard) === index
+              ? setQRCodeModalVisible(true)
+              : null;
+            break;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <>
       <Pressable
         onPress={() => {
-          _checkDoneItems(stampCard) === index
-            ? setQRCodeModalVisible(true)
-            : null;
+          checkCameraPermsision();
         }}
         key={(stamp.number + index).toString()}
         style={[styles.item, styles.stampItem]}>
@@ -133,6 +158,16 @@ const QRCodeModal: React.FC<Props> = ({
           </Heading>
         )}
       </Pressable>
+      <MainAlertDialog
+        title={strings('MISSING_CAMERA_PERMISSION_TITLE')}
+        description={strings('MISSING_CAMERA_PERMISSION_DESCRIPTION')}
+        showAlertDialog={showAlertDialog}
+        setShowAlertDialog={setShowAlertDialog}
+        okButtonText={strings('GO_TO_SETTINGS')}
+        okButtonCallback={() => {
+          openSettings().catch(() => console.warn('cannot open settings'));
+        }}
+      />
       <Modal
         size="full"
         isOpen={qrCodeModalVisible}

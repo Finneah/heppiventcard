@@ -18,7 +18,7 @@ exports[`HomeScreenHeader renders correctly 1`] = `
     flexDirection="row"
     justifyContent="space-between"
     marginBottom={10}
-    px={1}
+    px={2}
     style={
       Array [
         Object {
@@ -27,49 +27,12 @@ exports[`HomeScreenHeader renders correctly 1`] = `
           "flexDirection": "row",
           "justifyContent": "space-between",
           "marginBottom": 40,
-          "paddingLeft": 4,
-          "paddingRight": 4,
+          "paddingLeft": 8,
+          "paddingRight": 8,
         },
       ]
     }
   >
-    <Text
-      allowFontScaling={false}
-      fontSize="32px"
-      lineHeight="32px"
-      style={
-        Array [
-          Object {
-            "color": "primary.600",
-            "fontSize": 12,
-          },
-          Array [
-            Object {
-              "color": "#164e63",
-              "fontSize": 32,
-              "height": 32,
-              "lineHeight": 32,
-              "width": 32,
-            },
-          ],
-          Object {
-            "fontFamily": "Ionicons",
-            "fontStyle": "normal",
-            "fontWeight": "normal",
-          },
-          Object {},
-        ]
-      }
-    >
-      
-    </Text>
-    <View
-      style={
-        Array [
-          Object {},
-        ]
-      }
-    />
     <Text
       color="muted.700"
       fontFamily="body"
@@ -125,7 +88,7 @@ exports[`HomeScreenHeader renders correctly 1`] = `
         onError={[Function]}
         source={
           Object {
-            "testUri": "../../../src/image/logo.gif",
+            "testUri": "../../../src/image/logo.jpg",
           }
         }
         style={

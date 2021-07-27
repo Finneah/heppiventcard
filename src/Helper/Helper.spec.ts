@@ -3,7 +3,6 @@ import {UserRank} from './Enums';
 import {
   isValidUser,
   _checkDoneItems,
-  _createNewStampCard,
   _getFormatedDate,
   _getImageNameForRank,
   _getNewStampCardData,
@@ -244,9 +243,5 @@ describe('Helper', () => {
 
     expect(receivedData.title).toBe(newStampCardData.title);
     expect(receivedData.complete).toBe(newStampCardData.complete);
-  });
-
-  test('_createNewStampCard Function works correctly', () => {
-    expect(_createNewStampCard()).toBeCalledTimes(1);
   });
 });
